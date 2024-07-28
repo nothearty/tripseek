@@ -1,14 +1,12 @@
-import { Disclosure } from "@headlessui/react"
-import { Link } from "@tanstack/react-router"
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
-import tripseekLogo from "../assets/tripseekFont.svg"
+import { Disclosure } from "@headlessui/react";
+import { Link } from "@tanstack/react-router";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import tripseekLogo from "../assets/tripseekFont.svg";
 
-const navigation = [
-  { name: "Trip Generator", href: "/about", current: false },
-]
+const navigation = [{ name: "Trip Generator", href: "/about", current: false }];
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ")
+  return classes.filter(Boolean).join(" ");
 }
 
 const Navbar = () => {
@@ -49,8 +47,18 @@ const Navbar = () => {
                 </div>
               </div>
               <div className='hidden sm:flex sm:items-center'>
-                <button className='rounded-lg px-6 py-2 bg-zinc-900 text-white hover:opacity-90 transition-all duration-300 font-medium'>
-                  Sign In
+                <button
+                  className='rounded-lg px-6 py-2 bg-zinc-900 text-white hover:opacity-90 transition-all duration-300 font-medium flex items-center'
+                  onClick={() => {
+                    console.log("Sign in clicked");
+                  }}
+                >
+                  <img
+                    className='h-5 w-5 mr-2'
+                    src='https://img.icons8.com/color/48/google-logo.png'
+                    alt='Google'
+                  />
+                  Continue with Google
                 </button>
               </div>
               <div className='flex items-center sm:hidden'>
@@ -93,7 +101,7 @@ const Navbar = () => {
         </>
       )}
     </Disclosure>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

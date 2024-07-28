@@ -7,3 +7,10 @@ export const citySchema = z.object({
   country: z.string(),
   postalCode: z.string(),
 });
+
+export const postCitySchema = z.object({
+  name: z.string(),
+  province: z.string(),
+  country: z.string(),
+  postalCode: z.string(),
+});

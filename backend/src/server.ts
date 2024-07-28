@@ -1,9 +1,13 @@
 import "reflect-metadata";
+import { Hono } from "hono";
 import { serve } from "bun";
 import { logger } from "hono/logger";
+import loginRoute from "./routes/user/login";
+import tripsRoute from "./routes/trips";
 
-import app from "./index";
 import dataSource from "./database/database";
+
+const app = new Hono();
 
 dataSource
   .initialize()
@@ -17,6 +21,8 @@ dataSource
 
 const port = parseInt(process.env.PORT || "3000", 10);
 
+app.route("/trips", tripsRoute);
+app.route("/a", loginRoute);
 app.use(logger());
 
 serve({
