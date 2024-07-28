@@ -1,31 +1,31 @@
-// backend/src/index.ts
 import { Hono } from "hono"
-import { GoogleGenerativeAI } from "@google/generative-ai"
-import * as dotenv from "dotenv"
-dotenv.config()
-
-const apiKey = process.env.GEMINI_API_KEY as string
-
-const genAI = new GoogleGenerativeAI(apiKey)
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+import { generateTrip } from "./tripGenerator"
 
 const app = new Hono()
 
-console.log("Back-end server started")
-
-app.get("/api/data", (c) => {
-  return c.json({ message: "Hello from the back-end!" })
-})
-
 app.get("/generate", async (c) => {
-  const prompt = "Hi"
+  const city = c.req.query("city")
+  const dates = c.req.query("dates")
+  const activities = c.req.query("activities")
+  const peopleCount = c.req.query("peopleCount")
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
-  console.log(response)
+  if (!activities) {
+    return c.json({ error: "Activities are required" }, 400)
+  }
 
-  return c.text(text)
+  const prompt = {
+    city,
+    dates,
+    activities,
+    peopleCount,
+  }
+
+  try {
+    const response = await generateTrip(prompt)
+    return c.json({ response })
+  } catch (error) {
+    return c.json({ error: "Failed to generate trip" }, 500)
+  }
 })
 
 export default app
