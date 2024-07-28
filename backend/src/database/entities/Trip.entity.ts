@@ -7,7 +7,9 @@ import {
   BaseEntity,
   CreateDateColumn,
   ManyToOne,
+  JoinTable,
   JoinColumn,
+  ManyToMany,
 } from "typeorm";
 
 @Entity("trips")
@@ -24,20 +26,29 @@ export class Trip extends BaseEntity {
   @Column()
   text: string;
 
-  @Column()
+  @Column({ type: "timestamp with time zone" })
   departureDate: Date;
 
-  @Column()
+  @Column({ type: "timestamp with time zone" })
   returnDate: Date;
 
-  @ManyToOne(() => City)
-  @JoinColumn({ name: "city_id" })
-  @Column({ type: "simple-array", default: [] })
+  @ManyToMany(() => City)
+  @JoinTable({
+    name: "trip_cities",
+    joinColumn: {
+      name: "trip_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "city_id",
+      referencedColumnName: "id",
+    },
+  })
   cities: City[];
 
-  @Column()
-  price: number;
-
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: "timestamp with time zone",
+    default: () => "CURRENT_TIMESTAMP",
+  })
   created_at: Date;
 }
