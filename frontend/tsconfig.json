@@ -33,8 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     "./frontend/src",
-    "**/components/ui/*.tsx",
-    "src/routes/asd"
+    "**/components/ui/*.tsx"
   ],
   "exclude": ["node_modules"]
 }
