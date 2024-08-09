@@ -10,66 +10,79 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
-import { Route as TripsIndexImport } from './routes/trips/index'
-import { Route as TripsTripIdImport } from './routes/trips/$tripId'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as TripFormImport } from "./routes/trip-form";
+import { Route as AboutImport } from "./routes/about";
+import { Route as IndexImport } from "./routes/index";
+import { Route as TripsIndexImport } from "./routes/trips/index";
+import { Route as TripsTripIdImport } from "./routes/trips/$tripId";
 
 // Create/Update Routes
 
-const AboutRoute = AboutImport.update({
-  path: '/about',
+const TripFormRoute = TripFormImport.update({
+  path: "/trip-form",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
+
+const AboutRoute = AboutImport.update({
+  path: "/about",
+  getParentRoute: () => rootRoute,
+} as any);
 
 const IndexRoute = IndexImport.update({
-  path: '/',
+  path: "/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const TripsIndexRoute = TripsIndexImport.update({
-  path: '/trips/',
+  path: "/trips/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const TripsTripIdRoute = TripsTripIdImport.update({
-  path: '/trips/$tripId',
+  path: "/trips/$tripId",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
-    }
-    '/trips/$tripId': {
-      id: '/trips/$tripId'
-      path: '/trips/$tripId'
-      fullPath: '/trips/$tripId'
-      preLoaderRoute: typeof TripsTripIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/trips/': {
-      id: '/trips/'
-      path: '/trips'
-      fullPath: '/trips'
-      preLoaderRoute: typeof TripsIndexImport
-      parentRoute: typeof rootRoute
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/about": {
+      id: "/about";
+      path: "/about";
+      fullPath: "/about";
+      preLoaderRoute: typeof AboutImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/trips/$tripId": {
+      id: "/trips/$tripId";
+      path: "/trips/$tripId";
+      fullPath: "/trips/$tripId";
+      preLoaderRoute: typeof TripsTripIdImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/trips/": {
+      id: "/trips/";
+      path: "/trips";
+      fullPath: "/trips";
+      preLoaderRoute: typeof TripsIndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/trip-form": {
+      id: "/trip-form";
+      path: "/trip-form";
+      fullPath: "/trip-form";
+      preLoaderRoute: typeof TripFormImport;
+      parentRoute: typeof rootRoute;
+    };
   }
 }
 
@@ -80,7 +93,8 @@ export const routeTree = rootRoute.addChildren({
   AboutRoute,
   TripsTripIdRoute,
   TripsIndexRoute,
-})
+  TripFormRoute,
+});
 
 /* prettier-ignore-end */
 
@@ -93,7 +107,8 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/about",
         "/trips/$tripId",
-        "/trips/"
+        "/trips/",
+        "/trip-form"
       ]
     },
     "/": {
@@ -107,6 +122,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/trips/": {
       "filePath": "trips/index.tsx"
+    },
+    "/trip-form": {
+      "filePath": "trip-form.tsx"
     }
   }
 }
