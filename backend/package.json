@@ -1,25 +1,35 @@
 {
   "name": "backend",
   "scripts": {
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/server.ts"
   },
   "dependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/node": "^7.25.0",
+    "@babel/preset-env": "^7.25.3",
+    "@google/generative-ai": "^0.15.0",
     "@hono/zod-openapi": "^0.15.1",
     "@types/pg": "^8.11.6",
+    "all-the-cities": "^3.1.0",
     "axios": "^1.7.2",
-    "hono": "^4.5.1",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "hono": "^4.5.3",
     "hono-sessions": "^0.5.8",
     "oslo": "^1.2.1",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20",
     "typescript": "^5.5.3",
-    "zod": "^3.23.8",
-    "@google/generative-ai": "^0.15.0",
-    "cheerio": "^1.0.0-rc.12",
-    "dotenv": "^16.4.5"
+    "unsplash-js": "^7.0.19",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bun": "latest"
+  },
+  "module": "index.ts",
+  "type": "module",
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   }
 }

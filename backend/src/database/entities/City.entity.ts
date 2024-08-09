@@ -10,12 +10,11 @@ export class City extends BaseEntity {
   @Column()
   name: string;
 
-  @Column()
-  province: string;
+  // @Column()
+  // province: string;
+  // @Column({ type: "simple-array", nullable: true })
+  // photos: string[];
 
   @Column()
   country: string;
-
-  @Column()
-  postalCode: string;
 }

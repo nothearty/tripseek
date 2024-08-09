@@ -2,10 +2,39 @@
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.app.json"
-    },
-    {
       "path": "./tsconfig.node.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "baseUrl": "./src/",
+    "paths": {
+      "@/*": ["*"],
+      "@components/*": ["/components/*"],
+      "@lib/*": ["lib/*"],
+      "@server/*": ["../../backend/src/*"]
+    },
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "twin.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "./frontend/src",
+    "**/components/ui/*.tsx",
+    "src/routes/asd"
+  ],
+  "exclude": ["node_modules"]
 }

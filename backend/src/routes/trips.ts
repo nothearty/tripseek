@@ -1,15 +1,15 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
-import { Trip } from "../database/entities/Trip.entity"; // Ensure this path is correct
-import { citySchema } from "../schemas/citySchema"; // Ensure this path is correct
-import dataSource from "../database/database"; // Ensure this path is correct
+import { Trip } from "../database/entities/Trip.entity";
+import { citySchema } from "../schemas/citySchema";
+import dataSource from "../database/database";
 
 const postTripSchema = z.object({
   user_id: z.number().int(),
   text: z.string(),
-  returnDate: z.string().transform((str) => new Date(str)), // Convert string to Date
-  departureDate: z.string().transform((str) => new Date(str)), // Convert string to Date
+  returnDate: z.string().transform((str) => new Date(str)),
+  departureDate: z.string().transform((str) => new Date(str)),
   cities: z.array(citySchema).min(1),
 });
 
@@ -27,19 +27,33 @@ const putTripSchema = z.object({
 const tripsRepository = dataSource.getRepository(Trip);
 
 const tripsRoute = new Hono()
+  .get("/", async (c) => {
+    try {
+      console.log("GET /trips");
+      const trips = await tripsRepository.find({ relations: ["cities"] });
+      console.log("Trips:", trips);
+      return c.json(trips);
+    } catch (error) {
+      console.error("Error fetching trips:", error);
+      return c.json({ error: "Failed to fetch trips", details: error }, 500);
+    }
+  })
   .get("/:id", async (c) => {
     const id = parseInt(c.req.param("id"));
+    console.log("GET /trips/:id", id);
     if (isNaN(id)) {
       return c.json({ error: "Id not valid" });
     }
-    let trip = tripsRepository.findOne({
+    let trip = await tripsRepository.findOne({
       where: { id: id },
       relations: ["cities"],
     });
+    console.log("Albicocca:", trip);
     if (!trip) {
       return c.json({ error: "Trip not found" });
     }
-    return c.json(trip);
+    console.log("Trip:", trip);
+    return await c.json(trip);
   })
   .post("/", zValidator("json", postTripSchema), async (c) => {
     try {
