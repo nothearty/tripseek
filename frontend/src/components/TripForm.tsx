@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,20 +11,29 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import Activities from "./Activities"
-import TravelDays from "./TravelDays"
+} from "@/components/ui/form";
+import Activities from "./Activities";
+import TravelDays from "./TravelDays";
 //import { Input } from "@/components/ui/input"
-import { CityCombobox } from "@/components/CityCombobox"
+import { CityCombobox } from "@/components/CityCombobox";
+import BackButton from "./BackButton";
 
-const formSchema = z.object({
-  city: z.string().nonempty("City is required"),
-  daysNumber: z.number().min(1, "Number of days must be at least 1"),
-  activities: z.array(z.string()),
-  other: z.optional(z.string())
-})
+const formSchema = z
+  .object({
+    city: z.string().nonempty("City is required"),
+    daysNumber: z.number().min(1, "Number of days must be at least 1"),
+    activities: z.array(z.string()),
+    other: z.optional(z.string()),
+  })
+  .refine(
+    (data) => data.activities.length > 0 || (data.other && data.other.trim().length > 0),
+    {
+      message: "You must select at least one activity or provide other information.",
+      path: ["activities"], 
+    }
+  );
 
-type FormSchemaType = z.infer<typeof formSchema>
+type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function TripForm() {
   const form = useForm<FormSchemaType>({
@@ -33,18 +42,18 @@ export default function TripForm() {
       city: "",
       daysNumber: 1,
       activities: [],
-      other: ""
+      other: "",
     },
-  })
+  });
 
-  const { setValue, register, handleSubmit, control, watch } = form
+  const { setValue, register, handleSubmit, control, watch } = form;
 
-  const activitiesValue = watch("activities")
-  const daysNumberValue = watch("daysNumber")
-  const cityValue = watch("city")
+  const activitiesValue = watch("activities");
+  const daysNumberValue = watch("daysNumber");
+  const cityValue = watch("city");
 
   function onSubmit(values: FormSchemaType) {
-    console.log(values)
+    console.log(values);
   }
 
   return (
@@ -63,7 +72,7 @@ export default function TripForm() {
             <form onSubmit={handleSubmit(onSubmit)} className='space-y-10'>
               <div className='space-y-6'>
                 <FormField
-                  name="city"
+                  name='city'
                   control={control}
                   render={() => (
                     <FormItem>
@@ -82,13 +91,18 @@ export default function TripForm() {
               </div>
               <div className='space-y-6'>
                 <FormField
-                  name="daysNumber"
+                  name='daysNumber'
                   control={control}
                   render={() => (
                     <FormItem>
-                      <FormLabel>How many days will you be traveling?</FormLabel>
+                      <FormLabel>
+                        How many days will you be traveling?
+                      </FormLabel>
                       <FormControl>
-                        <TravelDays setValue={setValue} value={daysNumberValue} />
+                        <TravelDays
+                          setValue={setValue}
+                          value={daysNumberValue}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -97,24 +111,32 @@ export default function TripForm() {
               </div>
               <div className='space-y-6'>
                 <FormField
-                  name="activities"
+                  name='activities'
                   control={control}
                   render={() => (
                     <FormItem>
-                      <FormLabel>What activities are you excited about?</FormLabel>
+                      <FormLabel>
+                        What activities are you excited about?
+                      </FormLabel>
                       <FormControl>
-                        <Activities setValue={setValue} value={activitiesValue} />
+                        <Activities
+                          setValue={setValue}
+                          value={activitiesValue}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              <Button type='submit'>Submit</Button>
+              <div className="flex w-full justify-between">
+                <BackButton />
+                <Button type='submit'>Submit</Button>
+              </div>
             </form>
           </Form>
         </div>
       </div>
     </div>
-  )
+  );
 }
