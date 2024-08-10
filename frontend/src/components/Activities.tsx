@@ -30,10 +30,12 @@ const activityList: Activity[] = [
 
 const Activities: React.FC<ActivitiesProps> = ({ setValue, value }) => {
   const [selectedActivities, setSelectedActivities] = useState<string[]>(value);
+  const [otherActivity, setOtherActivity] = useState<string>("");
 
   useEffect(() => {
     setValue("activities", selectedActivities);
-  }, [setValue, selectedActivities]);
+    setValue("other", otherActivity); // Update the form state with the "Other" input value
+  }, [setValue, selectedActivities, otherActivity]);
 
   const handleActivitySelect = (activity: Activity) => {
     setSelectedActivities((prevSelected) =>
@@ -71,7 +73,13 @@ const Activities: React.FC<ActivitiesProps> = ({ setValue, value }) => {
           ))}
           <div className="font-medium text-[16px] mt-1 space-y-3 w-full">
             Other <span className="text-gray-300">(optional)</span>
-            <Input type="text" placeholder="Other" className="placeholder:font-normal font-normal" />
+            <Input
+              type="text"
+              placeholder="Other"
+              className="placeholder:font-normal font-normal"
+              value={otherActivity}
+              onChange={(e) => setOtherActivity(e.target.value)} // Handle the "Other" input change
+            />
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User } from "@server/sharedTypes";
 
-const navigation = [{ name: "Trip Generator", href: "/about", current: false }];
+const navigation = [{ name: "Trip Generator", href: "/trip-form", current: false }];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -63,7 +63,7 @@ const Navbar = () => {
   return (
     <Disclosure
       as='nav'
-      className='bg-white border-b border-gray-200 w-full absolute top-0 z-50'
+      className='bg-white border-b border-gray-200 w-full relative top-0 z-50'
     >
       {({ open }) => (
         <>
