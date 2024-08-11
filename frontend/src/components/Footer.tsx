@@ -14,9 +14,9 @@ export default function Footer(){
             </a>
             <div className="max-w-sm mx text-gray-600 pt-2">
               <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi
-                facere dolorum quo inventore voluptatibus minus reprehenderit
-                vel.
+                Experience travel planning like never before.
+                Get started with tripseek now, and watch as your 
+                dream itinerary comes to life in just minutes. Ready to explore?
               </p>
             </div>
           </div>
