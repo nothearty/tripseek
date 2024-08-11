@@ -4,7 +4,9 @@ export default function TrySection() {
       <div className='bg-lime-500 py-10 rounded-2xl mx-12'>
         <div className='text-center max-w-screen-sm flex flex-col space-y-4 justify-center items-center'>
           <h2 className='text-2xl sm:text-4xl text-gray-50 font-semibold sm:leading-[50px]'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut laudantium alias laboriosam.
+            Let tripseek guide your next adventure. 
+            With just a few clicks, create an itinerary tailored to your tastes.
+            Start planning your dream trip today. It's fast, easy, and free!
           </h2>
           <a
             href='/v2/trip-planner'
