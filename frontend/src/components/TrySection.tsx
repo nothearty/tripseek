@@ -9,7 +9,7 @@ export default function TrySection() {
             Start planning your dream trip today. It's fast, easy, and free!
           </h2>
           <a
-            href='/v2/trip-planner'
+            href='/trip-form'
             className="bg-white text-zinc-900 px-6 py-2 rounded-md"
             aria-label='Try Now'
           >
