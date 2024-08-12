@@ -10,7 +10,7 @@ const dataSource = new DataSource({
   username: Bun.env.DB_USER,
   password: Bun.env.DB_PASSWORD,
   database: Bun.env.DB_NAME,
-  logging: true,
+  logging: false,
   synchronize: true,
   entities: [User, City, Trip],
 });
