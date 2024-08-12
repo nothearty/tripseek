@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const API_KEY = Bun.env.GOOGLE_PLACES_API_KEY;
-console.log("API_KEY", API_KEY);
 
 async function getPlaceId(locationName: string): Promise<string | null> {
   const url =

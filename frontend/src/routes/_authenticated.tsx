@@ -18,10 +18,8 @@ export const Route = createFileRoute("/_authenticated")({
 
     try {
       const data = await queryClient.fetchQuery(userQueryOptions);
-      console.log("data", data);
       return data;
     } catch (e) {
-      console.log("error", e);
       return { user: null };
     }
   },

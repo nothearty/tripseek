@@ -4,11 +4,9 @@ import { zValidator } from "@hono/zod-validator";
 import { Trip } from "../database/entities/Trip.entity";
 import { City } from "src/database/entities/City.entity";
 import { User } from "../database/entities/User.entity";
-import { citySchema } from "../schemas/citySchema";
 import dataSource from "../database/database";
 import { generateTrip } from "src/utils/tripGenerator";
 import { Session } from "hono-sessions";
-import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import { authMiddleware } from "./auth";
 
 const postTripSchema = z.object({
@@ -35,27 +33,23 @@ type Variables = {
 
 const tripsRepository = dataSource.getRepository(Trip);
 const citiesRepository = dataSource.getRepository(City);
-const userRepository = dataSource.getRepository(User);
 
 const tripsRoute = new Hono<{ Variables: Variables }>()
   .use("*", authMiddleware)
-  .get("/:id", async (c) => {
-    const id = parseInt(c.req.param("id"));
-    if (isNaN(id)) {
-      return c.json({ error: "Id not valid" });
-    }
+  .get("/", async (c) => {
+    const session = c.get("session").get("user") as User;
     try {
-      const trip = await tripsRepository.findOne({
-        where: { id: id },
+      const trips = await tripsRepository.find({
+        where: { user: { id: session.id } },
         relations: ["cities"],
       });
-      if (!trip) {
-        return c.json({ error: "Trip not found" }, 404);
+      if (!trips) {
+        return c.json({ error: "User not found" }, 404);
       }
-      return c.json(trip as Trip); // Ensure it matches the Trip type
+      return c.json(trips);
     } catch (error) {
-      console.error("Error fetching trip by ID:", error);
-      return c.json({ error: "Failed to fetch trip", details: error }, 500);
+      console.error("Error fetching trips by user:", error);
+      return c.json({ error: "Failed to fetch trips", details: error }, 500);
     }
   })
   .get("/all", async (c) => {
@@ -89,9 +83,6 @@ const tripsRoute = new Hono<{ Variables: Variables }>()
   .post("/", zValidator("json", postTripSchema), async (c) => {
     try {
       const tripData = c.req.valid("json");
-      console.log("getCookie", getCookie(c, "session"));
-      console.log("tripData", tripData);
-      console.log("session", c.get("session").getCache());
       const user = c.get("session").get("user") as User;
 
       // Recupera la città
