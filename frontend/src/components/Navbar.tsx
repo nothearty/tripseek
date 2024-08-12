@@ -13,7 +13,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User } from "@server/sharedTypes";
 
-const navigation = [{ name: "Trip Generator", href: "/about", current: false }];
+const navigation = [
+  { name: "Generate a trip", href: "/trip-form", current: false },
+];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -87,7 +89,7 @@ const Navbar = () => {
                           item.current
                             ? "text-gray-900"
                             : "text-gray-700 hover:bg-gray-100 hover:text-gray-700",
-                          "px-3 py-2 rounded-md text-sm font-medium"
+                          "px-3 py-2 rounded-md text-[16px] font-medium"
                         )}
                       >
                         {item.name}
