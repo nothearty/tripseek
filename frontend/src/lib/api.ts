@@ -3,6 +3,7 @@ import { ApiRoutes } from "@server/server";
 import { queryOptions } from "@tanstack/react-query";
 import { City } from "@server/database/entities/City.entity";
 import { z } from "zod";
+import { Trip } from "@server/database/entities/Trip.entity";
 
 const client = hc<ApiRoutes>("/");
 
@@ -15,7 +16,9 @@ const postTripSchema = z.object({
 
 export const clientApi = client.api;
 
-export async function addTrip(trip: typeof postTripSchema._type) {
+export async function addTrip(
+  trip: typeof postTripSchema._type
+): Promise<Trip | null> {
   try {
     const res = await client.api.trips.$post({
       json: trip,
@@ -25,6 +28,22 @@ export async function addTrip(trip: typeof postTripSchema._type) {
     console.error("Error adding trip:", error);
     return null;
   }
+}
+
+export const userQueryOptions = queryOptions({
+  queryKey: ["get-current-user"],
+  queryFn: getCurrentUser,
+  staleTime: 1000 * 60 * 5,
+});
+
+async function getCurrentUser() {
+  const res = await client.api.auth.session.$get();
+  console.log("getCurrentUser", res);
+  if (!res.ok) {
+    throw new Error("server error");
+  }
+  const data = await res.json();
+  return data;
 }
 
 export async function getPhotos(locationName: string) {
@@ -44,16 +63,28 @@ export const photosQueryOptions = (locationName: string) =>
   });
 
 export async function getTrips() {
-  const res = await client.api.trips.$get();
+  const res = await client.api.trips.all.$get();
   console.log("getTrips", JSON.stringify(res, null, 2));
   return await res.json();
 }
 
-export const tripsQueryOptions = queryOptions({
-  queryKey: ["trips"],
-  queryFn: getTrips,
-  staleTime: 1000 * 60 * 5,
-});
+export async function getTripsByUser() {
+  console.log("getTripsByUser");
+  const res = await client.api.trips.$get();
+  return await res.json();
+}
+
+export async function getMe() {
+  const res = await client.api.auth.session.$get();
+  return await res.json();
+}
+
+export const tripsQueryOptions = (user_id: string) =>
+  queryOptions({
+    queryKey: ["trips", user_id],
+    queryFn: getTripsByUser,
+    staleTime: 1000 * 60 * 5,
+  });
 
 export async function getTrip(tripId: string) {
   return client.api.trips[":id"].$get({

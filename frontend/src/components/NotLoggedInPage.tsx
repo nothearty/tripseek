@@ -1,15 +1,16 @@
 export const NotLoggedIn = () => {
   return (
-    <div className='flex items-center justify-center h-full'>
+    <main className='grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8'>
       <div className='text-center'>
-        <h1 className='text-3xl font-bold mb-6'>Please log in</h1>
-        <p>
-          You need to log in to see the trips.{" "}
-          <a href='/login' className='text-blue-500 hover:underline'>
-            Log in
-          </a>
+        <p className='font-semibold text-5xl text-lime-500'>401</p>
+        <h1 className='mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
+          You need to log in
+        </h1>
+        <p className='mt-6 text-base leading-7 text-gray-600'>
+          Sorry, you must be logged in to access this page.
         </p>
+        <div className='mt-6 flex items-center justify-center gap-x-4'></div>
       </div>
-    </div>
+    </main>
   );
 };

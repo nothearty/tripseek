@@ -13,3 +13,17 @@ export interface TripInput {
   activities: string[];
   other?: string;
 }
+
+export interface City {
+  id: string;
+  name: string;
+  country: string;
+}
+
+export interface Trip {
+  id: string;
+  departureDate: string;
+  returnDate: string;
+  text: string;
+  cities: City[];
+}
