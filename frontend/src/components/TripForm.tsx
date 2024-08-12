@@ -15,25 +15,36 @@ import {
 import Activities from "./Activities";
 import TravelDays from "./TravelDays";
 import { CityCombobox } from "@/components/CityCombobox";
+import BackButton from "./BackButton";
 import { clientApi, getCity, addTrip } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { User } from "@server/sharedTypes";
 import { NotLoggedIn } from "@/components/NotLoggedInPage";
-
 import { toast } from "sonner";
 
-const formSchema = z.object({
-  city: z.string().nonempty("City is required"),
-  days: z.number().min(1, "Number of days must be at least 1"),
-  activities: z.array(z.string()).min(1, "At least one activity is required"),
-  other: z.string().optional(),
-});
+const formSchema = z
+  .object({
+    city: z.string().nonempty("City is required"),
+    days: z.number().min(1, "Number of days must be at least 1"),
+    activities: z.array(z.string()).min(1, "At least one activity is required"),
+    other: z.string().optional(),
+  })
+  .refine(
+    (data) =>
+      data.activities.length > 0 ||
+      (data.other && data.other.trim().length > 0),
+    {
+      message:
+        "You must select at least one activity or provide other information.",
+      path: ["activities"],
+    }
+  );
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function TripForm() {
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true); // Stato per gestire il caricamento
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUser() {
@@ -46,7 +57,7 @@ export default function TripForm() {
       } catch (error) {
         console.error("Error fetching user data:", error);
       } finally {
-        setIsLoading(false); // Stop il caricamento una volta finito
+        setIsLoading(false);
       }
     }
     fetchUser();
@@ -63,7 +74,7 @@ export default function TripForm() {
   });
 
   if (isLoading) {
-    return <p>Loading...</p>; // Optional: Messaggio di caricamento
+    return <p>Loading...</p>;
   }
 
   if (!user) {
@@ -222,7 +233,10 @@ export default function TripForm() {
                   )}
                 />
               </div>
-              <Button type='submit'>Submit</Button>
+              <div className='flex w-full justify-between'>
+                <BackButton />
+                <Button type='submit'>Submit</Button>
+              </div>
             </form>
           </Form>
         </div>
