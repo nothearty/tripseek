@@ -13,13 +13,14 @@ export class User extends BaseEntity {
   })
   id: number;
 
-  @Column({
-    type: "int",
-  })
-  google_id: number;
+  @Column({ type: "varchar", length: 255 })
+  google_id: string;
 
   @Column()
   name: string;
+
+  @Column()
+  picture: string;
 
   @Column()
   email: string;
