@@ -38,7 +38,27 @@ const citiesRepository = dataSource.getRepository(City);
 const userRepository = dataSource.getRepository(User);
 
 const tripsRoute = new Hono<{ Variables: Variables }>()
+  .use("*", authMiddleware)
   .get("/", async (c) => {
+    const session = c.get("session").get("user") as User;
+    console.log("ENTRATO IN TRIPS BY USER");
+    console.log("USER", session);
+    try {
+      const trips = await tripsRepository.find({
+        where: { user: { id: session.id } },
+        relations: ["cities"],
+      });
+      if (!trips) {
+        return c.json({ error: "User not found" }, 404);
+      }
+      console.log("ASDASDASD", trips);
+      return c.json(trips);
+    } catch (error) {
+      console.error("Error fetching trips by user:", error);
+      return c.json({ error: "Failed to fetch trips", details: error }, 500);
+    }
+  })
+  .get("/all", async (c) => {
     try {
       const trips = await tripsRepository.find({ relations: ["cities"] });
       return c.json(trips);
@@ -66,7 +86,7 @@ const tripsRoute = new Hono<{ Variables: Variables }>()
       return c.json({ error: "Failed to fetch trip", details: error }, 500);
     }
   })
-  .post("/", authMiddleware, zValidator("json", postTripSchema), async (c) => {
+  .post("/", zValidator("json", postTripSchema), async (c) => {
     try {
       const tripData = c.req.valid("json");
       console.log("getCookie", getCookie(c, "session"));
@@ -102,10 +122,7 @@ const tripsRoute = new Hono<{ Variables: Variables }>()
 
       await tripsRepository.save(newTrip);
 
-      return c.json(
-        { message: "Trip added to the database", trip: newTrip },
-        201
-      );
+      return c.json(newTrip, 201);
     } catch (error) {
       console.error("Error adding trip:", error);
       return c.json({ error: "Failed to add trip", details: error }, 500);
@@ -127,7 +144,7 @@ const tripsRoute = new Hono<{ Variables: Variables }>()
       tripsRepository.merge(trip, tripData);
       await tripsRepository.save(trip);
 
-      return c.json({ message: "Trip updated successfully", trip });
+      return c.json(trip);
     } catch (error) {
       console.error("Error updating trip:", error);
       return c.json({ error: "Failed to update trip", details: error }, 500);

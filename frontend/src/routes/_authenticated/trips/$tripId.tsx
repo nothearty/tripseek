@@ -124,7 +124,7 @@ const itinerary: TripProps = {
   ],
 };
 
-export const Route = createFileRoute("/trips/$tripId")({
+export const Route = createFileRoute("/_authenticated/trips/$tripId")({
   component: () => (
     <Trip
       city={itinerary.city}

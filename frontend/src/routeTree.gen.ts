@@ -11,21 +11,22 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as TripFormImport } from './routes/trip-form'
 import { Route as AboutImport } from './routes/about'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
-import { Route as TripsIndexImport } from './routes/trips/index'
-import { Route as TripsTripIdImport } from './routes/trips/$tripId'
+import { Route as AuthenticatedTripFormImport } from './routes/_authenticated/trip-form'
+import { Route as AuthenticatedTripsIndexImport } from './routes/_authenticated/trips/index'
+import { Route as AuthenticatedTripsTripIdImport } from './routes/_authenticated/trips/$tripId'
 
 // Create/Update Routes
 
-const TripFormRoute = TripFormImport.update({
-  path: '/trip-form',
+const AboutRoute = AboutImport.update({
+  path: '/about',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AboutRoute = AboutImport.update({
-  path: '/about',
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -34,14 +35,19 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const TripsIndexRoute = TripsIndexImport.update({
-  path: '/trips/',
-  getParentRoute: () => rootRoute,
+const AuthenticatedTripFormRoute = AuthenticatedTripFormImport.update({
+  path: '/trip-form',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
-const TripsTripIdRoute = TripsTripIdImport.update({
+const AuthenticatedTripsIndexRoute = AuthenticatedTripsIndexImport.update({
+  path: '/trips/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedTripsTripIdRoute = AuthenticatedTripsTripIdImport.update({
   path: '/trips/$tripId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -55,6 +61,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -62,26 +75,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/trip-form': {
-      id: '/trip-form'
+    '/_authenticated/trip-form': {
+      id: '/_authenticated/trip-form'
       path: '/trip-form'
       fullPath: '/trip-form'
-      preLoaderRoute: typeof TripFormImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedTripFormImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/trips/$tripId': {
-      id: '/trips/$tripId'
+    '/_authenticated/trips/$tripId': {
+      id: '/_authenticated/trips/$tripId'
       path: '/trips/$tripId'
       fullPath: '/trips/$tripId'
-      preLoaderRoute: typeof TripsTripIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedTripsTripIdImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/trips/': {
-      id: '/trips/'
+    '/_authenticated/trips/': {
+      id: '/_authenticated/trips/'
       path: '/trips'
       fullPath: '/trips'
-      preLoaderRoute: typeof TripsIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedTripsIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
   }
 }
@@ -90,10 +103,12 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  AuthenticatedRoute: AuthenticatedRoute.addChildren({
+    AuthenticatedTripFormRoute,
+    AuthenticatedTripsTripIdRoute,
+    AuthenticatedTripsIndexRoute,
+  }),
   AboutRoute,
-  TripFormRoute,
-  TripsTripIdRoute,
-  TripsIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -105,26 +120,35 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about",
-        "/trip-form",
-        "/trips/$tripId",
-        "/trips/"
+        "/_authenticated",
+        "/about"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/trip-form",
+        "/_authenticated/trips/$tripId",
+        "/_authenticated/trips/"
+      ]
+    },
     "/about": {
       "filePath": "about.tsx"
     },
-    "/trip-form": {
-      "filePath": "trip-form.tsx"
+    "/_authenticated/trip-form": {
+      "filePath": "_authenticated/trip-form.tsx",
+      "parent": "/_authenticated"
     },
-    "/trips/$tripId": {
-      "filePath": "trips/$tripId.tsx"
+    "/_authenticated/trips/$tripId": {
+      "filePath": "_authenticated/trips/$tripId.tsx",
+      "parent": "/_authenticated"
     },
-    "/trips/": {
-      "filePath": "trips/index.tsx"
+    "/_authenticated/trips/": {
+      "filePath": "_authenticated/trips/index.tsx",
+      "parent": "/_authenticated"
     }
   }
 }
