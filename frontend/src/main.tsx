@@ -8,15 +8,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { Toaster } from "@/components/ui/sonner";
 
+const queryClient = new QueryClient();
+
 // Configurazione del router
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   defaultNotFoundComponent: () => <NotFoundPage />,
+  context: { queryClient },
 });
 
 // Creazione del client di React Query
-const queryClient = new QueryClient();
 
 // Registrazione del modulo di router
 declare module "@tanstack/react-router" {

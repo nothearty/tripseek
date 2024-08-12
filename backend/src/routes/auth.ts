@@ -87,17 +87,26 @@ const loginRoute = new Hono<{ Variables: Variables }>()
           authenticateWith: "request_body",
         });
 
-      const user = await getGoogleUser(access_token);
-      const newUser = await userRepository.save({
-        google_id: user.id,
-        name: user.name,
-        email: user.email,
-        picture: user.picture,
+      const googleUser = await getGoogleUser(access_token);
+      let user;
+
+      const existingUser = await userRepository.findOne({
+        where: { google_id: googleUser.id },
       });
-      console.log("newUser", newUser);
+
+      if (existingUser) {
+        user = existingUser; // Assign existing user
+      } else {
+        user = await userRepository.save({
+          google_id: googleUser.id,
+          name: googleUser.name,
+          email: googleUser.email,
+          picture: googleUser.picture,
+        }); // Save new user
+      }
+
       const session = c.get("session");
-      session.set("user", newUser);
-      console.log("user", user);
+      session.set("user", user);
 
       // Redirect to frontend after successful login
       const redirectUrl = `http://localhost:5173/`;

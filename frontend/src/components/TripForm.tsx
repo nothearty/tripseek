@@ -1,5 +1,6 @@
 "use client";
 
+import { useNavigate } from "@tanstack/react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,11 +17,9 @@ import Activities from "./Activities";
 import TravelDays from "./TravelDays";
 import { CityCombobox } from "@/components/CityCombobox";
 import BackButton from "./BackButton";
-import { clientApi, getCity, addTrip } from "@/lib/api";
-import { useEffect, useState } from "react";
-import { User } from "@server/sharedTypes";
-import { NotLoggedIn } from "@/components/NotLoggedInPage";
+import { clientApi, getCity, addTrip, userQueryOptions } from "@/lib/api";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
 const formSchema = z
   .object({
@@ -43,25 +42,8 @@ const formSchema = z
 type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function TripForm() {
-  const [user, setUser] = useState<User | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const response = await fetch("/api/auth/session");
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchUser();
-  }, []);
+  const { isPending, isLoading, data: user } = useQuery(userQueryOptions);
+  const navigate = useNavigate();
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -72,14 +54,6 @@ export default function TripForm() {
       other: "",
     },
   });
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (!user) {
-    return <NotLoggedIn />;
-  }
 
   const { setValue, handleSubmit, control, watch, register } = form;
   const activitiesValue = watch("activities");
@@ -144,15 +118,26 @@ export default function TripForm() {
           2
         )
       );
-      await addTrip({
+      const newTrip = await addTrip({
         city_id: `${cityJson.id}`,
         days: values.days,
         activities: values.activities,
         other: values.other,
       });
 
+      if (!newTrip) {
+        return toast("Error creating trip", {
+          description: "An error occurred while creating the trip",
+        });
+      }
+      console.log("newTrip", newTrip);
       toast("Trip Created", {
         description: "Successfully created a new trip to " + city,
+      });
+
+      navigate({
+        to: "/trips/$tripId",
+        params: { tripId: newTrip.id.toString() },
       });
       console.log("Trip successfully created");
     } catch (error) {
@@ -161,6 +146,10 @@ export default function TripForm() {
       });
       console.error("Error creating trip:", error);
     }
+  }
+
+  if (isPending || isLoading) {
+    return <div>Loading...</div>;
   }
 
   return (
