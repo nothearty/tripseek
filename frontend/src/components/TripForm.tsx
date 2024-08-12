@@ -14,46 +14,153 @@ import {
 } from "@/components/ui/form";
 import Activities from "./Activities";
 import TravelDays from "./TravelDays";
-//import { Input } from "@/components/ui/input"
 import { CityCombobox } from "@/components/CityCombobox";
 import BackButton from "./BackButton";
+import { clientApi, getCity, addTrip } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { User } from "@server/sharedTypes";
+import { NotLoggedIn } from "@/components/NotLoggedInPage";
+import { toast } from "sonner";
 
 const formSchema = z
   .object({
     city: z.string().nonempty("City is required"),
-    daysNumber: z.number().min(1, "Number of days must be at least 1"),
-    activities: z.array(z.string()),
-    other: z.optional(z.string()),
+    days: z.number().min(1, "Number of days must be at least 1"),
+    activities: z.array(z.string()).min(1, "At least one activity is required"),
+    other: z.string().optional(),
   })
   .refine(
-    (data) => data.activities.length > 0 || (data.other && data.other.trim().length > 0),
+    (data) =>
+      data.activities.length > 0 ||
+      (data.other && data.other.trim().length > 0),
     {
-      message: "You must select at least one activity or provide other information.",
-      path: ["activities"], 
+      message:
+        "You must select at least one activity or provide other information.",
+      path: ["activities"],
     }
   );
 
 type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function TripForm() {
+  const [user, setUser] = useState<User | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const response = await fetch("/api/auth/session");
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchUser();
+  }, []);
+
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       city: "",
-      daysNumber: 1,
+      days: 1,
       activities: [],
       other: "",
     },
   });
 
-  const { setValue, register, handleSubmit, control, watch } = form;
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
+  if (!user) {
+    return <NotLoggedIn />;
+  }
+
+  const { setValue, handleSubmit, control, watch, register } = form;
   const activitiesValue = watch("activities");
-  const daysNumberValue = watch("daysNumber");
+  const daysValue = watch("days");
   const cityValue = watch("city");
 
-  function onSubmit(values: FormSchemaType) {
-    console.log(values);
+  async function fetchOrCreateCity(city: string, country: string) {
+    try {
+      const cityJson = await getCity(city);
+
+      if (cityJson) {
+        console.log("City found:", JSON.stringify(cityJson, null, 2));
+        return cityJson;
+      }
+
+      console.log("City not found, creating new city");
+      const postCityRes = await clientApi.cities.$post({
+        json: {
+          name: city,
+          country: country,
+        },
+      });
+
+      console.log("City created:", postCityRes);
+
+      return await postCityRes.json();
+    } catch (error) {
+      console.error("Error fetching or creating city:", error);
+      throw new Error("Failed to fetch or create city");
+    }
+  }
+
+  async function onSubmit(values: FormSchemaType) {
+    try {
+      console.log("values", values);
+
+      if (!user) {
+        console.error("User is undefined");
+        return;
+      }
+
+      const [city, country] = values.city.split("-");
+
+      const cityJson = await fetchOrCreateCity(city, country);
+      console.log("cityJson", cityJson);
+      if (!cityJson) {
+        console.error("City not found or failed to create");
+        return;
+      }
+
+      console.log("Creating trip");
+      console.log(
+        "cityJson",
+        JSON.stringify(
+          {
+            city_id: `${cityJson.id}`,
+            days: values.days,
+            activities: values.activities,
+            other: values.other,
+          },
+          null,
+          2
+        )
+      );
+      await addTrip({
+        city_id: `${cityJson.id}`,
+        days: values.days,
+        activities: values.activities,
+        other: values.other,
+      });
+
+      toast("Trip Created", {
+        description: "Successfully created a new trip to " + city,
+      });
+      console.log("Trip successfully created");
+    } catch (error) {
+      toast("Error creating trip", {
+        description: "An error occurred while creating the trip",
+      });
+      console.error("Error creating trip:", error);
+    }
   }
 
   return (
@@ -91,7 +198,7 @@ export default function TripForm() {
               </div>
               <div className='space-y-6'>
                 <FormField
-                  name='daysNumber'
+                  name='days'
                   control={control}
                   render={() => (
                     <FormItem>
@@ -99,10 +206,7 @@ export default function TripForm() {
                         How many days will you be traveling?
                       </FormLabel>
                       <FormControl>
-                        <TravelDays
-                          setValue={setValue}
-                          value={daysNumberValue}
-                        />
+                        <TravelDays setValue={setValue} value={daysValue} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -129,7 +233,7 @@ export default function TripForm() {
                   )}
                 />
               </div>
-              <div className="flex w-full justify-between">
+              <div className='flex w-full justify-between'>
                 <BackButton />
                 <Button type='submit'>Submit</Button>
               </div>

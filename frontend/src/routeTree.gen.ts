@@ -10,79 +10,79 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as TripFormImport } from "./routes/trip-form";
-import { Route as AboutImport } from "./routes/about";
-import { Route as IndexImport } from "./routes/index";
-import { Route as TripsIndexImport } from "./routes/trips/index";
-import { Route as TripsTripIdImport } from "./routes/trips/$tripId";
+import { Route as rootRoute } from './routes/__root'
+import { Route as TripFormImport } from './routes/trip-form'
+import { Route as AboutImport } from './routes/about'
+import { Route as IndexImport } from './routes/index'
+import { Route as TripsIndexImport } from './routes/trips/index'
+import { Route as TripsTripIdImport } from './routes/trips/$tripId'
 
 // Create/Update Routes
 
 const TripFormRoute = TripFormImport.update({
-  path: "/trip-form",
+  path: '/trip-form',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const AboutRoute = AboutImport.update({
-  path: "/about",
+  path: '/about',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const IndexRoute = IndexImport.update({
-  path: "/",
+  path: '/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const TripsIndexRoute = TripsIndexImport.update({
-  path: "/trips/",
+  path: '/trips/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const TripsTripIdRoute = TripsTripIdImport.update({
-  path: "/trips/$tripId",
+  path: '/trips/$tripId',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/about": {
-      id: "/about";
-      path: "/about";
-      fullPath: "/about";
-      preLoaderRoute: typeof AboutImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/trips/$tripId": {
-      id: "/trips/$tripId";
-      path: "/trips/$tripId";
-      fullPath: "/trips/$tripId";
-      preLoaderRoute: typeof TripsTripIdImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/trips/": {
-      id: "/trips/";
-      path: "/trips";
-      fullPath: "/trips";
-      preLoaderRoute: typeof TripsIndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/trip-form": {
-      id: "/trip-form";
-      path: "/trip-form";
-      fullPath: "/trip-form";
-      preLoaderRoute: typeof TripFormImport;
-      parentRoute: typeof rootRoute;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutImport
+      parentRoute: typeof rootRoute
+    }
+    '/trip-form': {
+      id: '/trip-form'
+      path: '/trip-form'
+      fullPath: '/trip-form'
+      preLoaderRoute: typeof TripFormImport
+      parentRoute: typeof rootRoute
+    }
+    '/trips/$tripId': {
+      id: '/trips/$tripId'
+      path: '/trips/$tripId'
+      fullPath: '/trips/$tripId'
+      preLoaderRoute: typeof TripsTripIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/trips/': {
+      id: '/trips/'
+      path: '/trips'
+      fullPath: '/trips'
+      preLoaderRoute: typeof TripsIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -91,10 +91,10 @@ declare module "@tanstack/react-router" {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AboutRoute,
+  TripFormRoute,
   TripsTripIdRoute,
   TripsIndexRoute,
-  TripFormRoute,
-});
+})
 
 /* prettier-ignore-end */
 
@@ -106,9 +106,9 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/about",
+        "/trip-form",
         "/trips/$tripId",
-        "/trips/",
-        "/trip-form"
+        "/trips/"
       ]
     },
     "/": {
@@ -117,14 +117,14 @@ export const routeTree = rootRoute.addChildren({
     "/about": {
       "filePath": "about.tsx"
     },
+    "/trip-form": {
+      "filePath": "trip-form.tsx"
+    },
     "/trips/$tripId": {
       "filePath": "trips/$tripId.tsx"
     },
     "/trips/": {
       "filePath": "trips/index.tsx"
-    },
-    "/trip-form": {
-      "filePath": "trip-form.tsx"
     }
   }
 }
