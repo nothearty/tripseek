@@ -35,10 +35,12 @@ const activityList: Activity[] = [
 
 const Activities: React.FC<ActivitiesProps> = ({ setValue, value }) => {
   const [selectedActivities, setSelectedActivities] = useState<string[]>(value);
+  const [otherActivity, setOtherActivity] = useState<string>("");
 
   useEffect(() => {
     setValue("activities", selectedActivities);
-  }, [setValue, selectedActivities]);
+    setValue("other", otherActivity); // Aggiorna lo stato del form con il valore dell'input "Other"
+  }, [setValue, selectedActivities, otherActivity]);
 
   const handleActivitySelect = (activity: Activity) => {
     setSelectedActivities((prevSelected) =>
@@ -80,6 +82,8 @@ const Activities: React.FC<ActivitiesProps> = ({ setValue, value }) => {
               type='text'
               placeholder='Other'
               className='placeholder:font-normal font-normal'
+              value={otherActivity}
+              onChange={(e) => setOtherActivity(e.target.value)} // Gestisci il cambiamento dell'input "Other"
             />
           </div>
         </div>

@@ -10,12 +10,14 @@ import { useComboboxContext } from './context';
 export type ComboboxInputProps = Omit<
   ComponentPropsWithoutRef<'input'>,
   keyof UseComboboxGetInputPropsReturnValue
->;
+> & {
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+};
 
 export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>((props, ref) => {
   const { getInputProps } = useComboboxContext();
 
-  // Get the input props from Downshift, including the ref
   const inputProps = getInputProps ? getInputProps({ ref }) : { ref };
 
   return (
