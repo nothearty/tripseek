@@ -8,7 +8,10 @@ if (!apiKey) {
 }
 
 const genAI = new GoogleGenerativeAI(apiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  generationConfig: { responseMimeType: "application/json" },
+});
 
 export async function generateTrip(prompt: TripInput): Promise<string> {
   console.log("generating");
@@ -40,7 +43,8 @@ export async function generateTrip(prompt: TripInput): Promise<string> {
     const result = await model.generateContent(request);
     const response = await result.response;
     const text = await response.text();
-    //console.log(text);
+    console.log("PORCODIO" + text);
+
     return text;
   } catch (error) {
     console.error("Error generating content:", error);

@@ -23,8 +23,11 @@ export class Trip extends BaseEntity {
   @JoinColumn({ name: "user_id" })
   user: User;
 
-  @Column()
-  text: string;
+  @Column({
+    type: "json",
+    nullable: true,
+  })
+  text: any;
 
   @Column({ type: "timestamp with time zone" })
   departureDate: Date;

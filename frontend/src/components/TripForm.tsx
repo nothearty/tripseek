@@ -1,5 +1,3 @@
-"use client";
-
 import { useNavigate } from "@tanstack/react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -20,6 +18,7 @@ import BackButton from "./BackButton";
 import { clientApi, getCity, addTrip, userQueryOptions } from "@/lib/api";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const formSchema = z
   .object({
@@ -44,6 +43,7 @@ type FormSchemaType = z.infer<typeof formSchema>;
 export default function TripForm() {
   const { isPending, isLoading, data: user } = useQuery(userQueryOptions);
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -87,6 +87,7 @@ export default function TripForm() {
   }
 
   async function onSubmit(values: FormSchemaType) {
+    setIsSubmitting(true); // Inizio l'invio
     try {
       console.log("values", values);
 
@@ -145,6 +146,8 @@ export default function TripForm() {
         description: "An error occurred while creating the trip",
       });
       console.error("Error creating trip:", error);
+    } finally {
+      setIsSubmitting(false); // Rendi il pulsante di submit nuovamente abilitato
     }
   }
 
@@ -224,7 +227,9 @@ export default function TripForm() {
               </div>
               <div className='flex w-full justify-between'>
                 <BackButton />
-                <Button type='submit'>Submit</Button>
+                <Button type='submit' disabled={isSubmitting}>
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </Button>
               </div>
             </form>
           </Form>
