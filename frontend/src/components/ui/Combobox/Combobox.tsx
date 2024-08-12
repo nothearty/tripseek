@@ -1,27 +1,25 @@
-import { useCallback, useEffect, useState, type PropsWithChildren } from "react"
-import { useCombobox, type UseComboboxProps } from "downshift"
+import { useCallback, useEffect, useState, type PropsWithChildren } from "react";
+import { useCombobox, type UseComboboxProps } from "downshift";
+import { Popover } from "@/components/ui/popover";
+import { ComboboxContext } from "./context";
+import type { ComboboxItemBase } from "./types";
 
-import { Popover } from "@/components/ui/popover"
-
-import { ComboboxContext } from "./context"
-import type { ComboboxItemBase } from "./types"
-
-const { stateChangeTypes } = useCombobox
+const { stateChangeTypes } = useCombobox;
 
 const defaultFilter = (inputValue: string, items: ComboboxItemBase[]) =>
   items.filter(
     (item) =>
       !inputValue || item.label.toLowerCase().includes(inputValue.toLowerCase())
-  )
+  );
 
 export type ComboboxProps = PropsWithChildren<{
-  value?: string | null
-  onValueChange?: (value: string | null) => void
+  value?: string | null;
+  onValueChange?: (value: string | null) => void;
   filterItems?: (
     inputValue: string,
     items: ComboboxItemBase[]
-  ) => ComboboxItemBase[]
-}>
+  ) => ComboboxItemBase[];
+}>;
 
 export const ComboBox = ({
   value,
@@ -29,9 +27,9 @@ export const ComboBox = ({
   filterItems = defaultFilter,
   children,
 }: ComboboxProps) => {
-  const [items, setItems] = useState<ComboboxItemBase[]>([]),
-    [filteredItems, setFilteredItems] = useState<ComboboxItemBase[]>(items)
-  const [openedOnce, setOpenedOnce] = useState(false)
+  const [items, setItems] = useState<ComboboxItemBase[]>([]);
+  const [filteredItems, setFilteredItems] = useState<ComboboxItemBase[]>(items);
+  const [openedOnce, setOpenedOnce] = useState(false);
 
   const stateReducer = useCallback<
     NonNullable<UseComboboxProps<ComboboxItemBase>["stateReducer"]>
@@ -42,11 +40,11 @@ export const ComboBox = ({
           const filteredEnabledItems = filterItems(
             changes.inputValue || prev.inputValue,
             items
-          ).filter(({ disabled }) => !disabled)
+          ).filter(({ disabled }) => !disabled);
           const highlightedIndex =
             typeof changes.highlightedIndex === "number"
               ? changes.highlightedIndex
-              : prev.highlightedIndex
+              : prev.highlightedIndex;
 
           return {
             ...changes,
@@ -56,7 +54,7 @@ export const ComboBox = ({
               highlightedIndex < 0
                 ? 0
                 : changes.highlightedIndex,
-          }
+          };
         }
 
         case stateChangeTypes.InputBlur:
@@ -68,21 +66,21 @@ export const ComboBox = ({
               ...changes,
               inputValue: prev.inputValue,
               selectedItem: prev.selectedItem,
-            }
+            };
           if (!prev.inputValue && prev.highlightedIndex < 0)
-            return { ...changes, inputValue: "", selectedItem: null }
+            return { ...changes, inputValue: "", selectedItem: null };
 
           const inputValue =
-            changes.selectedItem?.label || prev.selectedItem?.label || ""
-          return { ...changes, inputValue }
+            changes.selectedItem?.label || prev.selectedItem?.label || "";
+          return { ...changes, inputValue };
         }
 
         default:
-          return changes
+          return changes;
       }
     },
     [filterItems, items]
-  )
+  );
 
   const {
     getInputProps,
@@ -107,15 +105,15 @@ export const ComboBox = ({
       onValueChange?.(selectedItem?.value || null),
 
     stateReducer,
-  })
+  });
 
   useEffect(() => {
-    if (isOpen && !openedOnce) setOpenedOnce(isOpen)
-  }, [isOpen, openedOnce])
+    if (isOpen && !openedOnce) setOpenedOnce(isOpen);
+  }, [isOpen, openedOnce]);
 
   useEffect(() => {
-    setFilteredItems(filterItems(inputValue, items))
-  }, [filterItems, inputValue, items])
+    setFilteredItems(filterItems(inputValue, items));
+  }, [filterItems, inputValue, items]);
 
   return (
     <ComboboxContext.Provider
@@ -140,5 +138,5 @@ export const ComboBox = ({
         <div {...getMenuProps()}>{children}</div>
       </Popover>
     </ComboboxContext.Provider>
-  )
-}
+  );
+};
