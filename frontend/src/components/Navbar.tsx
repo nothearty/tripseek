@@ -107,7 +107,7 @@ const Navbar = () => {
                           className='inline-block h-9 w-9 rounded-full ring-2 ring-white'
                           src={user.picture || FALLBACK_IMAGE}
                           alt=''
-                        ></img>
+                        />
                         <span className='ml-2 text-gray-900 font-semibold'>
                           {user.name}
                         </span>
@@ -125,13 +125,6 @@ const Navbar = () => {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-
-                    {/* <button
-                    className='ml-4 rounded-lg px-6 py-2 text-white hover:opacity-90 transition-all duration-300 font-medium'
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button> */}
                   </div>
                 ) : (
                   <button
@@ -180,18 +173,36 @@ const Navbar = () => {
             </div>
             <div className='px-2 pb-3'>
               {user ? (
-                <button
-                  className='w-full rounded-lg px-6 py-2 bg-zinc-900 text-white hover:opacity-90 transition-all duration-300 font-medium'
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className='w-full rounded-lg px-6 py-2 bg-zinc-900 text-white hover:opacity-90 transition-all duration-300 font-medium flex items-center'>
+                    <img
+                      className='h-5 w-5 rounded-full ring-2 ring-white'
+                      src={user.picture || FALLBACK_IMAGE}
+                      alt=''
+                    />
+                    <span className='ml-2 text-white font-semibold'>
+                      {user.name}
+                    </span>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <Link to='/trips' className='flex-shrink-0'>
+                        My Trips
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleLogout()}>
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <button
                   className='w-full rounded-lg px-6 py-2 bg-zinc-900 text-white hover:opacity-90 transition-all duration-300 font-medium'
                   onClick={handleGoogleLogin}
                 >
-                  Sign In
+                  Sign In with Google
                 </button>
               )}
             </div>

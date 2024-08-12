@@ -60,12 +60,18 @@ export default function Footer() {
               </h2>
               <ul className='text-zinc-900 dark:text-gray-400 font-medium'>
                 <li className='mb-4'>
-                  <a href='#' className='hover:underline text-zinc-800'>
+                  <a
+                    href='/coming-soon'
+                    className='hover:underline text-zinc-800'
+                  >
                     Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href='#' className='hover:underline text-zinc-800'>
+                  <a
+                    href='/coming-soon'
+                    className='hover:underline text-zinc-800'
+                  >
                     Terms & Conditions
                   </a>
                 </li>
@@ -84,7 +90,7 @@ export default function Footer() {
           </span>
           <div className='flex mt-4 sm:justify-center sm:mt-0'>
             <a
-              href='#'
+              href='https://github.com/xenopers/tripseek'
               className='text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5'
             >
               <svg

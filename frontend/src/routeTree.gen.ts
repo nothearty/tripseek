@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TripFormImport } from './routes/trip-form'
+import { Route as ComingSoonImport } from './routes/coming-soon'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as TripsIndexImport } from './routes/trips/index'
@@ -21,6 +22,11 @@ import { Route as TripsTripIdImport } from './routes/trips/$tripId'
 
 const TripFormRoute = TripFormImport.update({
   path: '/trip-form',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ComingSoonRoute = ComingSoonImport.update({
+  path: '/coming-soon',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -62,6 +68,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/coming-soon': {
+      id: '/coming-soon'
+      path: '/coming-soon'
+      fullPath: '/coming-soon'
+      preLoaderRoute: typeof ComingSoonImport
+      parentRoute: typeof rootRoute
+    }
     '/trip-form': {
       id: '/trip-form'
       path: '/trip-form'
@@ -91,6 +104,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AboutRoute,
+  ComingSoonRoute,
   TripFormRoute,
   TripsTripIdRoute,
   TripsIndexRoute,
@@ -106,6 +120,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/about",
+        "/coming-soon",
         "/trip-form",
         "/trips/$tripId",
         "/trips/"
@@ -116,6 +131,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/coming-soon": {
+      "filePath": "coming-soon.tsx"
     },
     "/trip-form": {
       "filePath": "trip-form.tsx"
