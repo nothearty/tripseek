@@ -49,7 +49,7 @@ async function getPlacePhotos(placeId: string): Promise<any[] | null> {
   }
 }
 
-function getPhotoUrl(photoReference: string, maxWidth: number = 400): string {
+function getPhotoUrl(photoReference: string, maxWidth: number = 1200): string {
   return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=${API_KEY}`;
 }
 

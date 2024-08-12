@@ -39,23 +39,23 @@ const userRepository = dataSource.getRepository(User);
 
 const tripsRoute = new Hono<{ Variables: Variables }>()
   .use("*", authMiddleware)
-  .get("/", async (c) => {
-    const session = c.get("session").get("user") as User;
-    console.log("ENTRATO IN TRIPS BY USER");
-    console.log("USER", session);
+  .get("/:id", async (c) => {
+    const id = parseInt(c.req.param("id"));
+    if (isNaN(id)) {
+      return c.json({ error: "Id not valid" });
+    }
     try {
-      const trips = await tripsRepository.find({
-        where: { user: { id: session.id } },
+      const trip = await tripsRepository.findOne({
+        where: { id: id },
         relations: ["cities"],
       });
-      if (!trips) {
-        return c.json({ error: "User not found" }, 404);
+      if (!trip) {
+        return c.json({ error: "Trip not found" }, 404);
       }
-      console.log("ASDASDASD", trips);
-      return c.json(trips);
+      return c.json(trip as Trip); // Ensure it matches the Trip type
     } catch (error) {
-      console.error("Error fetching trips by user:", error);
-      return c.json({ error: "Failed to fetch trips", details: error }, 500);
+      console.error("Error fetching trip by ID:", error);
+      return c.json({ error: "Failed to fetch trip", details: error }, 500);
     }
   })
   .get("/all", async (c) => {

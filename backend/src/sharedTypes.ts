@@ -24,6 +24,22 @@ export interface Trip {
   id: string;
   departureDate: string;
   returnDate: string;
-  text: string;
+  text: TripProps;
   cities: City[];
 }
+
+export type TripProps = {
+  city: string;
+  daysNumber: number;
+  description: string;
+  history: string;
+  itinerary: {
+    day: string;
+    parts: {
+      activities: {
+        placeName: string;
+        placeDescription: string;
+      }[];
+    }[];
+  }[];
+};

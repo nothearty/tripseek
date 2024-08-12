@@ -4,6 +4,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { City } from "@server/database/entities/City.entity";
 import { z } from "zod";
 import { Trip } from "@server/database/entities/Trip.entity";
+import { TripProps } from "@server/sharedTypes";
 
 const client = hc<ApiRoutes>("/");
 
@@ -87,11 +88,12 @@ export const tripsQueryOptions = (user_id: string) =>
   });
 
 export async function getTrip(tripId: string) {
-  return client.api.trips[":id"].$get({
+  const res = await client.api.trips[":id"].$get({
     param: {
       id: tripId,
     },
   });
+  return await res.json();
 }
 
 export const tripQueryOptions = (tripId: string) =>
