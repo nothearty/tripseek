@@ -1,10 +1,15 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router"
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 // import { TanStackRouterDevtools } from "@tanstack/router-devtools"
-import Navbar from "../components/Navbar"
+import Navbar from "../components/Navbar";
+import { QueryClient } from "@tanstack/react-query";
 
-export const Route = createRootRoute({
+interface MyRouterContext {
+  queryClient: QueryClient;
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
-})
+});
 
 function RootComponent() {
   return (
@@ -13,5 +18,5 @@ function RootComponent() {
       {/* <TanStackRouterDevtools position='bottom-right' /> */}
       <Outlet />
     </>
-  )
+  );
 }

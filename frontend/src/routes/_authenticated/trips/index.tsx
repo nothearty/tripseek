@@ -9,11 +9,13 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
-import { tripsQueryOptions, photosQueryOptions, isLogged } from "@/lib/api";
+import {
+  tripsQueryOptions,
+  photosQueryOptions,
+  userQueryOptions,
+} from "@/lib/api";
 import { Calendar } from "lucide-react";
-import { useEffect, useState } from "react";
-import { User } from "@server/sharedTypes";
-import { NotLoggedIn } from "@/components/NotLoggedInPage";
+import NoTripsPage from "@/components/NoTripsPage";
 
 // Aggiungi un tipo per i dati restituiti dalla query delle foto
 // type PhotoQueryResult = { photos: string[] } | { error: string };
@@ -43,31 +45,13 @@ const TripPhoto = ({ cityName }: { cityName: string }) => {
 };
 
 const Trips = () => {
-  const { data, isLoading, isError } = useQuery(tripsQueryOptions);
-  const [logged, setLogged] = useState<{ user?: User; error?: string } | null>(
-    null
+  const { isPending, error, data: user } = useQuery(userQueryOptions);
+  const { data, isLoading, isError } = useQuery(
+    tripsQueryOptions(user?.user.id ?? "")
   );
 
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      try {
-        const result = await isLogged();
-        setLogged(result);
-      } catch (error) {
-        setLogged({ error: "Failed to fetch login status" });
-      }
-    };
-
-    checkLoggedIn();
-  }, []);
-
-  if (!logged) {
-    return <div>Checking login status...</div>;
-  }
-
-  if (logged.error || !logged.user) {
-    return <NotLoggedIn />;
-  }
+  if (isPending) return "loading";
+  if (error) return "not logged in";
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -77,7 +61,12 @@ const Trips = () => {
     return <div>Error loading trips.</div>;
   }
 
-  const trips = data || [];
+  const trips = Array.isArray(data) ? data : [];
+
+  console.log("trips", trips);
+  if (!trips.length) {
+    return <NoTripsPage />;
+  }
 
   return (
     <div className='flex'>
@@ -90,9 +79,7 @@ const Trips = () => {
                 className='m-2 p-2 cursor-pointer transition-transform transform hover:scale-105 shadow-lg rounded-lg'
                 id={`${trip.id}`}
               >
-                {/* Usa il componente TripPhoto per mostrare la foto */}
                 <TripPhoto cityName={trip.cities[0].name} />{" "}
-                {/* Usa la prima città come esempio */}
                 <CardHeader>
                   <CardTitle className='text-xl font-semibold flex items-center justify-between'>
                     {trip.cities.map((city) => city.name).join(", ")}
@@ -122,7 +109,6 @@ const Trips = () => {
   );
 };
 
-export const Route = createFileRoute("/trips/")({
+export const Route = createFileRoute("/_authenticated/trips/")({
   component: Trips,
 });
-
