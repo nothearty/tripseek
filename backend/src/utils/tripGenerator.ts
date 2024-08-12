@@ -14,37 +14,60 @@ const model = genAI.getGenerativeModel({
 });
 
 export async function generateTrip(prompt: TripInput): Promise<string> {
-  console.log("generating");
-
   try {
-    const request = `Generate me a trip itinerary to ${prompt.city} for ${
-      prompt.days
-    }. Describe the city a little bit, and provide me a little story of the city and include this activities: ${
-      prompt.activities
-    } in my itinerary ${
-      prompt.other ? `including these other infos ${prompt.other}` : null
-    }. Provide me places name (at least 3 places per day) to visit and little description of one.
-    Generate me a JSON in this format and this types. Use ' in the string, instead of ".
-     {
-      city: string;
-      daysNumber: number; // Total number of days in the trip
-      description: string; // City description
-      history: string;
-      itinerary: {
-        day: string;
-        parts: {
-          activities: {
-            placeName: string; // The name of the place to visit
-            placeDescription: string; // Description of the place to visit
-          }[];
-        }[];
-      }[];
-    };`;
+    const request = `Generate a detailed trip itinerary in JSON format for the following prompt: 
+    {
+      city: '${prompt.city}',
+      daysNumber: ${prompt.days},
+      description: 'Brief description of the city.',
+      history: 'Brief historical background of the city.',
+      itinerary: [
+        {
+          day: 'Day 1: Title for the first day',
+          parts: [
+            {
+              activities: [
+                {
+                  placeName: 'Name of the place',
+                  placeDescription: 'Description of the place'
+                },
+                {
+                  placeName: 'Name of another place',
+                  placeDescription: 'Description of this place'
+                },
+                {
+                  placeName: 'Name of another place',
+                  placeDescription: 'Description of this place'
+                }
+              ]
+            },
+            {
+              activities: [
+                {
+                  placeName: 'Name of the place',
+                  placeDescription: 'Description of the place'
+                },
+                {
+                  placeName: 'Name of another place',
+                  placeDescription: 'Description of this place'
+                },
+                {
+                  placeName: 'Name of another place',
+                  placeDescription: 'Description of this place'
+                }
+              ]
+            }
+          ]
+        },
+        // Repeat similar blocks for each day of the trip
+      ]
+    }
+
+    Ensure that the JSON follows this format exactly and that each field is filled out with realistic data. Use single quotes for strings, and make sure the JSON is valid and complete.`;
+
     const result = await model.generateContent(request);
     const response = await result.response;
     const text = await response.text();
-    console.log("PORCODIO" + text);
-
     return text;
   } catch (error) {
     console.error("Error generating content:", error);

@@ -4,7 +4,6 @@ import { queryOptions } from "@tanstack/react-query";
 import { City } from "@server/database/entities/City.entity";
 import { z } from "zod";
 import { Trip } from "@server/database/entities/Trip.entity";
-import { TripProps } from "@server/sharedTypes";
 
 const client = hc<ApiRoutes>("/");
 
@@ -39,7 +38,6 @@ export const userQueryOptions = queryOptions({
 
 async function getCurrentUser() {
   const res = await client.api.auth.session.$get();
-  console.log("getCurrentUser", res);
   if (!res.ok) {
     throw new Error("server error");
   }
@@ -63,14 +61,7 @@ export const photosQueryOptions = (locationName: string) =>
     staleTime: Infinity,
   });
 
-export async function getTrips() {
-  const res = await client.api.trips.all.$get();
-  console.log("getTrips", JSON.stringify(res, null, 2));
-  return await res.json();
-}
-
 export async function getTripsByUser() {
-  console.log("getTripsByUser");
   const res = await client.api.trips.$get();
   return await res.json();
 }
@@ -106,7 +97,7 @@ export const tripQueryOptions = (tripId: string) =>
 export async function isLogged() {
   const res = await client.api.auth.session.$get();
   const json = await res.json();
-  console.log("isLogged", json);
+
   return json;
 }
 

@@ -27,7 +27,6 @@ dataSource
   .initialize()
   .then(() => {
     console.log("DataSource Sucessfully Connected With The Database!!!");
-    console.log(dataSource.options.entities);
   })
   .catch((err) => {
     console.log("DataSource Connection Failed", err);

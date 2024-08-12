@@ -3,7 +3,6 @@ import { fetchPlacePhotos } from "../utils/places";
 
 const placesRoute = new Hono().get("/photos", async (c) => {
   const locationName = c.req.query("locationName");
-  console.log("locationName", locationName);
   if (!locationName) {
     return c.json({ error: "locationName query parameter is required" }, 400);
   }

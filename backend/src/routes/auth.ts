@@ -68,7 +68,6 @@ const loginRoute = new Hono<{ Variables: Variables }>()
     return c.json({ url: (await url).toString() });
   })
   .get("/google/callback", async (c) => {
-    console.log("callback");
     const { code, state } = c.req.query();
     const sessionState = getCookie(c, "state");
 
@@ -120,13 +119,10 @@ const loginRoute = new Hono<{ Variables: Variables }>()
     return c.json({ message: "Logged out" });
   })
   .get("/session", async (c) => {
-    console.log("entrato");
     const session = c.get("session");
 
     // Cast `user` to the `User` type
     const user = session.get("user") as User | undefined;
-
-    console.log("user", user);
 
     if (!user) {
       return c.json({ error: "Not logged in" }, 401);
@@ -138,7 +134,6 @@ const loginRoute = new Hono<{ Variables: Variables }>()
     const googleId = c.req.param("googleId");
     let user;
 
-    console.log("googleId", googleId);
     try {
       user = await userRepository.findOne({
         where: { google_id: googleId },
