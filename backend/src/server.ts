@@ -5,7 +5,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 // import { getPhotos } from "./utils/places";
 
-import loginRoute from "./routes/user/login";
+import loginRoute from "./routes/auth";
 import tripsRoute from "./routes/trips";
 import citiesRoute from "./routes/cities";
 import placesRoute from "./routes/places";
@@ -14,7 +14,7 @@ import dataSource from "./database/database";
 const app = new Hono();
 
 app.use(cors());
-// app.use(logger());
+app.use(logger());
 
 const routes = app
   .basePath("/api")

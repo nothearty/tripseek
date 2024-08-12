@@ -1,27 +1,36 @@
-import { useState, useEffect } from "react"
-import { CheckIcon } from "lucide-react"
+import { useState, useEffect } from "react";
+import { CheckIcon } from "lucide-react";
 import {
   ComboBox,
   ComboboxContent,
   ComboboxEmpty,
   ComboboxInput,
   ComboboxItem,
-} from "@/components/ui/Combobox"
-import { CITIES } from "@/components/items"
-import { UseFormSetValue, UseFormRegisterReturn } from "react-hook-form"
+} from "@/components/ui/Combobox";
+import { CITIES } from "@/components/items";
+import { UseFormSetValue, UseFormRegisterReturn } from "react-hook-form";
 
 type CityComboboxProps = {
-  setValue: UseFormSetValue<{ city: string; daysNumber: number; activities: string[]; other?: string }>;
+  setValue: UseFormSetValue<{
+    city: string;
+    days: number;
+    activities: string[];
+    other?: string;
+  }>;
   register: UseFormRegisterReturn;
   value: string | null;
 };
 
-export const CityCombobox: React.FC<CityComboboxProps> = ({ setValue, register, value }) => {
-  const [localValue, setLocalValue] = useState<string | null>(value)
+export const CityCombobox: React.FC<CityComboboxProps> = ({
+  setValue,
+  register,
+  value,
+}) => {
+  const [localValue, setLocalValue] = useState<string | null>(value);
 
   useEffect(() => {
-    setValue("city", localValue || "")
-  }, [localValue, setValue])
+    setValue("city", localValue || "");
+  }, [localValue, setValue]);
 
   return (
     <>
@@ -30,13 +39,15 @@ export const CityCombobox: React.FC<CityComboboxProps> = ({ setValue, register, 
         onValueChange={setLocalValue}
         filterItems={(inputValue, items) =>
           items.filter(({ value }) => {
-            const city = CITIES.find((city) => city.id === value)
+            const city = CITIES.find((city) => city.id === value);
             return (
               !inputValue ||
               (city &&
                 (city.city.toLowerCase().includes(inputValue.toLowerCase()) ||
-                city.country.toLowerCase().includes(inputValue.toLowerCase())))
-            )
+                  city.country
+                    .toLowerCase()
+                    .includes(inputValue.toLowerCase())))
+            );
           })
         }
       >
@@ -45,7 +56,7 @@ export const CityCombobox: React.FC<CityComboboxProps> = ({ setValue, register, 
           {CITIES.map(({ id, city, country }) => (
             <ComboboxItem
               key={id}
-              value={id}
+              value={`${city}-${country}`}
               label={city}
               className='ps-8'
             >
@@ -62,5 +73,5 @@ export const CityCombobox: React.FC<CityComboboxProps> = ({ setValue, register, 
         </ComboboxContent>
       </ComboBox>
     </>
-  )
-}
+  );
+};

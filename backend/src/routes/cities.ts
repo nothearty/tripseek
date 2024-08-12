@@ -6,14 +6,22 @@ import { z } from "zod";
 
 const postCitySchema = z.object({
   name: z.string(),
-  province: z.string(),
   country: z.string(),
-  postalCode: z.string(),
 });
 
 const citiesRepository = dataSource.getRepository(City);
 
 const citiesRoute = new Hono()
+  .get("/:name", async (c) => {
+    const name = c.req.param("name");
+    let city = await citiesRepository.findOne({
+      where: { name: name },
+    });
+    if (!city) {
+      throw new Error("City not found");
+    }
+    return c.json(city);
+  })
   .get("/:id", async (c) => {
     const id = parseInt(c.req.param("id"));
     if (isNaN(id)) {
@@ -28,10 +36,13 @@ const citiesRoute = new Hono()
     return c.json(city);
   })
   .post("/", zValidator("json", postCitySchema), async (c) => {
-    const cityData = c.req.valid("json");
+    const cityData = await c.req.valid("json");
     await citiesRepository.save(cityData);
+    const newCity = await citiesRepository.findOne({
+      where: { name: cityData.name, country: cityData.country },
+    });
 
-    return c.json({ message: "POST /trips" });
+    return c.json(newCity);
   })
   .delete("/:id", async (c) => {
     const id = parseInt(c.req.param("id"));
