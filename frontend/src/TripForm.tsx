@@ -12,8 +12,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Activities from "./Activities";
-import TravelDays from "./TravelDays";
+import Activities from "./components/Activities";
+import TravelDays from "./components/TravelDays";
 //import { Input } from "@/components/ui/input"
 import { CityCombobox } from "@/components/CityCombobox";
 import BackButton from "./BackButton";
@@ -21,15 +21,18 @@ import BackButton from "./BackButton";
 const formSchema = z
   .object({
     city: z.string().nonempty("City is required"),
-    daysNumber: z.number().min(1, "Number of days must be at least 1"),
+    days: z.number().min(1, "Number of days must be at least 1"),
     activities: z.array(z.string()),
     other: z.optional(z.string()),
   })
   .refine(
-    (data) => data.activities.length > 0 || (data.other && data.other.trim().length > 0),
+    (data) =>
+      data.activities.length > 0 ||
+      (data.other && data.other.trim().length > 0),
     {
-      message: "You must select at least one activity or provide other information.",
-      path: ["activities"], 
+      message:
+        "You must select at least one activity or provide other information.",
+      path: ["activities"],
     }
   );
 
@@ -40,7 +43,7 @@ export default function TripForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       city: "",
-      daysNumber: 1,
+      days: 1,
       activities: [],
       other: "",
     },
@@ -49,7 +52,7 @@ export default function TripForm() {
   const { setValue, register, handleSubmit, control, watch } = form;
 
   const activitiesValue = watch("activities");
-  const daysNumberValue = watch("daysNumber");
+  const daysNumberValue = watch("days");
   const cityValue = watch("city");
 
   function onSubmit(values: FormSchemaType) {
@@ -91,7 +94,7 @@ export default function TripForm() {
               </div>
               <div className='space-y-6'>
                 <FormField
-                  name='daysNumber'
+                  name='days'
                   control={control}
                   render={() => (
                     <FormItem>
@@ -129,7 +132,7 @@ export default function TripForm() {
                   )}
                 />
               </div>
-              <div className="flex w-full justify-between">
+              <div className='flex w-full justify-between'>
                 <BackButton />
                 <Button type='submit'>Submit</Button>
               </div>
