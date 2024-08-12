@@ -13,11 +13,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User } from "@server/sharedTypes";
 
-const navigation = [{ name: "Trip Generator", href: "/trip-form", current: false }];
+const navigation = [{ name: "Trip Generator", href: "/about", current: false }];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
+
+const FALLBACK_IMAGE =
+  "https://www.wycliffe.ca/wp-content/uploads/2021/03/member-fallback-user-image.png";
 
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -61,10 +64,7 @@ const Navbar = () => {
   };
 
   return (
-    <Disclosure
-      as='nav'
-      className='bg-white border-b border-gray-200 w-full relative top-0 z-50'
-    >
+    <Disclosure as='nav' className='bg-white w-[80%] mx-auto relative'>
       {({ open }) => (
         <>
           <div className='mx-auto px-4 sm:px-6 lg:px-8'>
@@ -103,7 +103,7 @@ const Navbar = () => {
                       <DropdownMenuTrigger>
                         <img
                           className='inline-block h-9 w-9 rounded-full ring-2 ring-white'
-                          src={user.picture}
+                          src={user.picture || FALLBACK_IMAGE}
                           alt=''
                         ></img>
                         <span className='ml-2 text-gray-900 font-semibold'>

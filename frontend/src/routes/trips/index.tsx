@@ -13,6 +13,7 @@ import { tripsQueryOptions, photosQueryOptions, isLogged } from "@/lib/api";
 import { Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { User } from "@server/sharedTypes";
+import { NotLoggedIn } from "@/components/NotLoggedInPage";
 
 // Aggiungi un tipo per i dati restituiti dalla query delle foto
 // type PhotoQueryResult = { photos: string[] } | { error: string };
@@ -38,22 +39,6 @@ const TripPhoto = ({ cityName }: { cityName: string }) => {
       alt={`${cityName} photo`}
       className='w-full h-48 object-cover rounded-lg'
     />
-  );
-};
-
-const NotLoggedIn = () => {
-  return (
-    <div className='flex items-center justify-center h-full'>
-      <div className='text-center'>
-        <h1 className='text-3xl font-bold mb-6'>Please log in</h1>
-        <p>
-          You need to log in to see the trips.{" "}
-          <a href='/login' className='text-blue-500 hover:underline'>
-            Log in
-          </a>
-        </p>
-      </div>
-    </div>
   );
 };
 
@@ -115,7 +100,7 @@ const Trips = () => {
                 </CardHeader>
                 <CardContent className='bg-gray-50 p-4 rounded-b-lg'>
                   <CardDescription className='text-gray-700'>
-                    {trip.text}
+                    {trip.text.substring(0, 255)}...
                   </CardDescription>
                 </CardContent>
                 <CardFooter className='flex items-center justify-between bg-gray-50 p-4 rounded-b-lg'>

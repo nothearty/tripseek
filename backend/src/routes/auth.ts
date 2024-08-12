@@ -2,14 +2,16 @@ import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { CookieStore, Session, sessionMiddleware } from "hono-sessions";
 import { generateState, OAuth2Client } from "oslo/oauth2";
-import { User } from "../../sharedTypes";
+import { User } from "../sharedTypes";
 import { User as UserEntity } from "src/database/entities/User.entity";
+import dataSource from "src/database/database";
 
 type Variables = {
   session: Session;
 };
 
 const store = new CookieStore();
+const userRepository = dataSource.getRepository(UserEntity);
 
 const googleClientId = Bun.env.GOOGLE_CLIENT_ID || "";
 const googleOAuth2Client = new OAuth2Client(
@@ -33,19 +35,18 @@ const getGoogleUser = async (accessToken: string) => {
   return response.json();
 };
 
+export const authMiddleware = sessionMiddleware({
+  store,
+  encryptionKey: Bun.env.SESSION_ENCRYPTION_KEY,
+  expireAfterSeconds: 1800,
+  cookieOptions: {
+    path: "/",
+    httpOnly: true,
+  },
+});
+
 const loginRoute = new Hono<{ Variables: Variables }>()
-  .use(
-    "*",
-    sessionMiddleware({
-      store,
-      encryptionKey: Bun.env.SESSION_ENCRYPTION_KEY,
-      expireAfterSeconds: 1800,
-      cookieOptions: {
-        path: "/",
-        httpOnly: true,
-      },
-    })
-  )
+  .use("*", authMiddleware)
   .get("/google", async (c) => {
     const state = generateState();
 
@@ -87,8 +88,16 @@ const loginRoute = new Hono<{ Variables: Variables }>()
         });
 
       const user = await getGoogleUser(access_token);
+      const newUser = await userRepository.save({
+        google_id: user.id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+      });
+      console.log("newUser", newUser);
       const session = c.get("session");
-      session.set("user", user);
+      session.set("user", newUser);
+      console.log("user", user);
 
       // Redirect to frontend after successful login
       const redirectUrl = `http://localhost:5173/`;
@@ -115,6 +124,21 @@ const loginRoute = new Hono<{ Variables: Variables }>()
     }
 
     return c.json({ user }, 200);
+  })
+  .get("/user/:googleId", async (c) => {
+    const googleId = c.req.param("googleId");
+    let user;
+
+    console.log("googleId", googleId);
+    try {
+      user = await userRepository.findOne({
+        where: { google_id: googleId },
+      });
+      return c.json({ user: user });
+    } catch (error) {
+      console.error("Error fetching user by Google ID:", error);
+      return c.json({ message: "Internal server error", error: error }, 500);
+    }
   });
 
 export default loginRoute;

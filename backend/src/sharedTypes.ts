@@ -6,3 +6,10 @@ export interface User {
   given_name: string;
   picture: string;
 }
+
+export interface TripInput {
+  city: string;
+  days: number;
+  activities: string[];
+  other?: string;
+}
