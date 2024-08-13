@@ -37,7 +37,7 @@ Before starting, ensure that you have Bun.js installed on your system.
     DB_NAME=your_database_name
     DB_USER=your_database_user
     GOOGLE_CLIENT_ID=your_google_client_id
-    SESSION_ENCRYPTION_KEY=your_session_encryption_key
+    SESSION_ENCRYPTION_KEY=your_32_character_long_session_encryption_key
     GOOGLE_CLIENT_SECRET=your_google_client_secret
     GEMINI_API_KEY=your_gemini_api_key
     GOOGLE_PLACES_API_KEY=your_google_places_api_key
@@ -49,7 +49,7 @@ Before starting, ensure that you have Bun.js installed on your system.
     `DB_NAME`: The name of the database you're using.\
     `DB_USER`: The database user name.\
     `GOOGLE_CLIENT_ID`: The client ID for Google OAuth.\
-    `SESSION_ENCRYPTION_KEY`: A key used to encrypt session data.\
+    `SESSION_ENCRYPTION_KEY`: A key used to encrypt session data (must be 32 characters long).\
     `GOOGLE_CLIENT_SECRET`: The client secret for Google OAuth.\
     `GEMINI_API_KEY`: API key for the Gemini API.\
     `GOOGLE_PLACES_API_KEY`: API key for Google Places API.\
