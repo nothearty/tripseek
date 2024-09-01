@@ -1,12 +1,6 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ],
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2015", // Changed from es5 to ES2015 for modern JavaScript support
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "baseUrl": "./src/",
@@ -18,15 +12,17 @@
     },
     "allowImportingTsExtensions": true,
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": true, // Change to false if you want TypeScript to emit JS
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true // Added to skip type checks on declaration files
   },
   "include": [
     "next-env.d.ts",

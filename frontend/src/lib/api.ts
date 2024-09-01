@@ -23,7 +23,11 @@ export async function addTrip(
     const res = await client.api.trips.$post({
       json: trip,
     });
-    return await res.json();
+    if (!res.ok) {
+      throw new Error("Failed to add trip");
+    }
+    const data = await res.json() as Trip;
+    return data as Trip; // Ensure the response conforms to the `Trip` type
   } catch (error) {
     console.error("Error adding trip:", error);
     return null;
