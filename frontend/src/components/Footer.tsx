@@ -3,7 +3,7 @@ import tripseekLogo from "../assets/tripseekFont.svg";
 export default function Footer() {
   return (
     <footer className='bg-white dark:bg-gray-900 border-t border-zinc-300'>
-      <div className='mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8'>
+      <div className='mx-10 lg:mx-32 max-w-screen-xl p-4 py-6 lg:py-8'>
         <div className='md:flex md:justify-between'>
           <div className='mb-6 md:mb-0'>
             <a href='/' className='flex items-center'>
@@ -82,7 +82,7 @@ export default function Footer() {
             </a>
             . All Rights Reserved.
           </span>
-          <div className='flex mt-4 sm:justify-center sm:mt-0'>
+          {/* <div className='flex mt-4 sm:justify-center sm:mt-0'>
             <a
               href='#'
               className='text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5'
@@ -102,7 +102,7 @@ export default function Footer() {
               </svg>
               <span className='sr-only'>GitHub account</span>
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>
