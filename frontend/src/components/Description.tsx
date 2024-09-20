@@ -4,10 +4,10 @@ import thirdImg from "../assets/fifteen.svg";
 
 export default function Description() {
   return (
-    <div className='container -mt-2 mb-2 lg:mb-8 mx-auto max-w-5xl z-20'>
+    <div className='container -mt-1 mb-2 lg:mb-8 mx-auto max-w-5xl z-20'>
       <div
         id='about'
-        className='px-6 text-center text-3xl font-bold md:text-4xl lg:px-12 xl:text-5xl text-nowrap'
+        className='px-6 text-center text-3xl font-bold md:text-4xl lg:px-12 xl:text-5xl'
       >
         Plan Smarter, Travel Better
       </div>
@@ -44,7 +44,7 @@ export default function Description() {
         </div>
       </div>
       <div className='flex flex-wrap items-center'>
-        <div className='w-full pxs`-6 sm:w-1/2 md:mt-8'>
+        <div className='w-full px-6 sm:w-1/2 md:mt-8'>
           <h3 className='mb-3 w-fit text-2xl font-bold leading-none text-black md:text-3xl bg-lime-100 px-1'>
             Instant Itineraries
           </h3>

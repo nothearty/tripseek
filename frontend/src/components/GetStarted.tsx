@@ -2,7 +2,7 @@ import travelerImage from "../assets/five.svg";
 
 export default function GetStarted() {
   return (
-    <div className='container mx-auto text-center bg-white min-h-[70vh] md:min-h-[95vh] flex flex-col relative items-center justify-center'>
+    <div className='container mx-auto text-center bg-white xl:min-h-[95vh] flex flex-col relative items-center justify-center'>
       <h1 className='max-w-5xl mx-auto text-4xl sm:text-5xl md:text-6xl font-bold mb-0 sm:mb-0 flex justify-center flex-wrap text-gray-900 leading-8 lg:leading-12'>
         Effortless Travel,
       </h1>
