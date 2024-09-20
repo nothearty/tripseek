@@ -10,92 +10,92 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as AboutImport } from './routes/about'
-import { Route as AuthenticatedImport } from './routes/_authenticated'
-import { Route as IndexImport } from './routes/index'
-import { Route as AuthenticatedTripFormImport } from './routes/_authenticated/trip-form'
-import { Route as AuthenticatedTripsIndexImport } from './routes/_authenticated/trips/index'
-import { Route as AuthenticatedTripsTripIdImport } from './routes/_authenticated/trips/$tripId'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as AboutImport } from "./routes/about";
+import { Route as AuthenticatedImport } from "./routes/_authenticated";
+import { Route as IndexImport } from "./routes/index";
+import { Route as AuthenticatedTripFormImport } from "./routes/trip-form";
+import { Route as AuthenticatedTripsIndexImport } from "./routes/_authenticated/trips/index";
+import { Route as AuthenticatedTripsTripIdImport } from "./routes/_authenticated/trips/$tripId";
 
 // Create/Update Routes
 
 const AboutRoute = AboutImport.update({
-  path: '/about',
+  path: "/about",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const AuthenticatedRoute = AuthenticatedImport.update({
-  id: '/_authenticated',
+  id: "/_authenticated",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const IndexRoute = IndexImport.update({
-  path: '/',
+  path: "/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const AuthenticatedTripFormRoute = AuthenticatedTripFormImport.update({
-  path: '/trip-form',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
+  path: "/trip-form",
+  getParentRoute: () => rootRoute,
+} as any);
 
 const AuthenticatedTripsIndexRoute = AuthenticatedTripsIndexImport.update({
-  path: '/trips/',
+  path: "/trips/",
   getParentRoute: () => AuthenticatedRoute,
-} as any)
+} as any);
 
 const AuthenticatedTripsTripIdRoute = AuthenticatedTripsTripIdImport.update({
-  path: '/trips/$tripId',
+  path: "/trips/$tripId",
   getParentRoute: () => AuthenticatedRoute,
-} as any)
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthenticatedImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
-    }
-    '/_authenticated/trip-form': {
-      id: '/_authenticated/trip-form'
-      path: '/trip-form'
-      fullPath: '/trip-form'
-      preLoaderRoute: typeof AuthenticatedTripFormImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/trips/$tripId': {
-      id: '/_authenticated/trips/$tripId'
-      path: '/trips/$tripId'
-      fullPath: '/trips/$tripId'
-      preLoaderRoute: typeof AuthenticatedTripsTripIdImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/trips/': {
-      id: '/_authenticated/trips/'
-      path: '/trips'
-      fullPath: '/trips'
-      preLoaderRoute: typeof AuthenticatedTripsIndexImport
-      parentRoute: typeof AuthenticatedImport
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_authenticated": {
+      id: "/_authenticated";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof AuthenticatedImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/about": {
+      id: "/about";
+      path: "/about";
+      fullPath: "/about";
+      preLoaderRoute: typeof AboutImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/trip-form": {
+      id: "/trip-form";
+      path: "/trip-form";
+      fullPath: "/trip-form";
+      preLoaderRoute: typeof AuthenticatedTripFormImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_authenticated/trips/$tripId": {
+      id: "/_authenticated/trips/$tripId";
+      path: "/trips/$tripId";
+      fullPath: "/trips/$tripId";
+      preLoaderRoute: typeof AuthenticatedTripsTripIdImport;
+      parentRoute: typeof AuthenticatedImport;
+    };
+    "/_authenticated/trips/": {
+      id: "/_authenticated/trips/";
+      path: "/trips";
+      fullPath: "/trips";
+      preLoaderRoute: typeof AuthenticatedTripsIndexImport;
+      parentRoute: typeof AuthenticatedImport;
+    };
   }
 }
 
@@ -109,7 +109,7 @@ export const routeTree = rootRoute.addChildren({
     AuthenticatedTripsIndexRoute,
   }),
   AboutRoute,
-})
+});
 
 /* prettier-ignore-end */
 
@@ -153,3 +153,4 @@ export const routeTree = rootRoute.addChildren({
   }
 }
 ROUTE_MANIFEST_END */
+

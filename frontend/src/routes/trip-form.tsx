@@ -1,7 +1,7 @@
 import TripForm from "@/components/TripForm";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authenticated/trip-form")({
+export const Route = createFileRoute("/trip-form")({
   component: TripFormPage,
 });
 
