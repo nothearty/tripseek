@@ -15,9 +15,8 @@ import Activities from "./Activities";
 import TravelDays from "./TravelDays";
 import { CityCombobox } from "@/components/CityCombobox";
 import BackButton from "./BackButton";
-import { clientApi, getCity, addTrip, userQueryOptions } from "@/lib/api";
+import { clientApi, getCity, addTrip } from "@/lib/api";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 const formSchema = z
@@ -41,7 +40,6 @@ const formSchema = z
 type FormSchemaType = z.infer<typeof formSchema>;
 
 export default function TripForm() {
-  const { isPending, isLoading, data: user } = useQuery(userQueryOptions);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -85,11 +83,6 @@ export default function TripForm() {
   async function onSubmit(values: FormSchemaType) {
     setIsSubmitting(true); // Inizio l'invio
     try {
-      if (!user) {
-        console.error("User is undefined");
-        return;
-      }
-
       const [city, country] = values.city.split("-");
 
       const cityJson = await fetchOrCreateCity(city, country);
@@ -129,27 +122,23 @@ export default function TripForm() {
     }
   }
 
-  if (isPending || isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div className='max-w-full max-h-full pb-20'>
-      <div className='container mx-auto mt-8'>
-        <div className='sm:w-2/3 xl:w-1/2 mx-auto'>
-          <h1 className='text-2xl md:text-3xl lg:text-4xl font-semibold mb-2'>
+    <div className="max-w-full max-h-full pb-20">
+      <div className="container mx-auto mt-8">
+        <div className="sm:w-2/3 xl:w-1/2 mx-auto">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-2">
             Customize Your Travel Experience
           </h1>
-          <p className='text-gray-500 mb-8'>
+          <p className="text-gray-500 mb-8">
             Provide us with some key details, and our trip planner will craft a
             personalized itinerary designed to give you unforgettable travel
             experience.
           </p>
           <Form {...form}>
-            <form onSubmit={handleSubmit(onSubmit)} className='space-y-10'>
-              <div className='space-y-6'>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+              <div className="space-y-6">
                 <FormField
-                  name='city'
+                  name="city"
                   control={control}
                   render={() => (
                     <FormItem>
@@ -166,9 +155,9 @@ export default function TripForm() {
                   )}
                 />
               </div>
-              <div className='space-y-6'>
+              <div className="space-y-6">
                 <FormField
-                  name='days'
+                  name="days"
                   control={control}
                   render={() => (
                     <FormItem>
@@ -183,9 +172,9 @@ export default function TripForm() {
                   )}
                 />
               </div>
-              <div className='space-y-6'>
+              <div className="space-y-6">
                 <FormField
-                  name='activities'
+                  name="activities"
                   control={control}
                   render={() => (
                     <FormItem>
@@ -203,9 +192,9 @@ export default function TripForm() {
                   )}
                 />
               </div>
-              <div className='flex w-full justify-between'>
+              <div className="flex w-full justify-between">
                 <BackButton />
-                <Button type='submit' disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Submitting..." : "Submit"}
                 </Button>
               </div>

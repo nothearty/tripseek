@@ -10,92 +10,92 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as AboutImport } from "./routes/about";
-import { Route as AuthenticatedImport } from "./routes/_authenticated";
-import { Route as IndexImport } from "./routes/index";
-import { Route as AuthenticatedTripFormImport } from "./routes/trip-form";
-import { Route as AuthenticatedTripsIndexImport } from "./routes/_authenticated/trips/index";
-import { Route as AuthenticatedTripsTripIdImport } from "./routes/_authenticated/trips/$tripId";
+import { Route as rootRoute } from './routes/__root'
+import { Route as TripFormImport } from './routes/trip-form'
+import { Route as AboutImport } from './routes/about'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as IndexImport } from './routes/index'
+import { Route as AuthenticatedTripsIndexImport } from './routes/_authenticated/trips/index'
+import { Route as AuthenticatedTripsTripIdImport } from './routes/_authenticated/trips/$tripId'
 
 // Create/Update Routes
 
-const AboutRoute = AboutImport.update({
-  path: "/about",
+const TripFormRoute = TripFormImport.update({
+  path: '/trip-form',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
+
+const AboutRoute = AboutImport.update({
+  path: '/about',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthenticatedRoute = AuthenticatedImport.update({
-  id: "/_authenticated",
+  id: '/_authenticated',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const IndexRoute = IndexImport.update({
-  path: "/",
+  path: '/',
   getParentRoute: () => rootRoute,
-} as any);
-
-const AuthenticatedTripFormRoute = AuthenticatedTripFormImport.update({
-  path: "/trip-form",
-  getParentRoute: () => rootRoute,
-} as any);
+} as any)
 
 const AuthenticatedTripsIndexRoute = AuthenticatedTripsIndexImport.update({
-  path: "/trips/",
+  path: '/trips/',
   getParentRoute: () => AuthenticatedRoute,
-} as any);
+} as any)
 
 const AuthenticatedTripsTripIdRoute = AuthenticatedTripsTripIdImport.update({
-  path: "/trips/$tripId",
+  path: '/trips/$tripId',
   getParentRoute: () => AuthenticatedRoute,
-} as any);
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/_authenticated": {
-      id: "/_authenticated";
-      path: "";
-      fullPath: "";
-      preLoaderRoute: typeof AuthenticatedImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/about": {
-      id: "/about";
-      path: "/about";
-      fullPath: "/about";
-      preLoaderRoute: typeof AboutImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/trip-form": {
-      id: "/trip-form";
-      path: "/trip-form";
-      fullPath: "/trip-form";
-      preLoaderRoute: typeof AuthenticatedTripFormImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/_authenticated/trips/$tripId": {
-      id: "/_authenticated/trips/$tripId";
-      path: "/trips/$tripId";
-      fullPath: "/trips/$tripId";
-      preLoaderRoute: typeof AuthenticatedTripsTripIdImport;
-      parentRoute: typeof AuthenticatedImport;
-    };
-    "/_authenticated/trips/": {
-      id: "/_authenticated/trips/";
-      path: "/trips";
-      fullPath: "/trips";
-      preLoaderRoute: typeof AuthenticatedTripsIndexImport;
-      parentRoute: typeof AuthenticatedImport;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
+      parentRoute: typeof rootRoute
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutImport
+      parentRoute: typeof rootRoute
+    }
+    '/trip-form': {
+      id: '/trip-form'
+      path: '/trip-form'
+      fullPath: '/trip-form'
+      preLoaderRoute: typeof TripFormImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated/trips/$tripId': {
+      id: '/_authenticated/trips/$tripId'
+      path: '/trips/$tripId'
+      fullPath: '/trips/$tripId'
+      preLoaderRoute: typeof AuthenticatedTripsTripIdImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/trips/': {
+      id: '/_authenticated/trips/'
+      path: '/trips'
+      fullPath: '/trips'
+      preLoaderRoute: typeof AuthenticatedTripsIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
   }
 }
 
@@ -104,12 +104,12 @@ declare module "@tanstack/react-router" {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AuthenticatedRoute: AuthenticatedRoute.addChildren({
-    AuthenticatedTripFormRoute,
     AuthenticatedTripsTripIdRoute,
     AuthenticatedTripsIndexRoute,
   }),
   AboutRoute,
-});
+  TripFormRoute,
+})
 
 /* prettier-ignore-end */
 
@@ -121,7 +121,8 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/_authenticated",
-        "/about"
+        "/about",
+        "/trip-form"
       ]
     },
     "/": {
@@ -130,7 +131,6 @@ export const routeTree = rootRoute.addChildren({
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
-        "/_authenticated/trip-form",
         "/_authenticated/trips/$tripId",
         "/_authenticated/trips/"
       ]
@@ -138,9 +138,8 @@ export const routeTree = rootRoute.addChildren({
     "/about": {
       "filePath": "about.tsx"
     },
-    "/_authenticated/trip-form": {
-      "filePath": "_authenticated/trip-form.tsx",
-      "parent": "/_authenticated"
+    "/trip-form": {
+      "filePath": "trip-form.tsx"
     },
     "/_authenticated/trips/$tripId": {
       "filePath": "_authenticated/trips/$tripId.tsx",
@@ -153,4 +152,3 @@ export const routeTree = rootRoute.addChildren({
   }
 }
 ROUTE_MANIFEST_END */
-
