@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2015", // Changed from es5 to ES2015 for modern JavaScript support
+    "target": "ES2022",
+    "module": "ES2022", 
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "baseUrl": "./src/",
