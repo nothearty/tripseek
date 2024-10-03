@@ -1,8 +1,8 @@
-import { useNavigate } from "@tanstack/react-router";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { useNavigate } from "@tanstack/react-router"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -10,18 +10,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import Activities from "./Activities";
-import TravelDays from "./TravelDays";
-import { CityCombobox } from "@/components/CityCombobox";
-import BackButton from "./BackButton";
-import { clientApi, getCity, addTrip } from "@/lib/api";
-import { toast } from "sonner";
-import { useState } from "react";
+} from "@/components/ui/form"
+import Activities from "./Activities"
+import TravelDays from "./TravelDays"
+import { CityCombobox } from "@/components/CityCombobox"
+import BackButton from "./BackButton"
+import { clientApi, getCity, addTrip } from "@/lib/api"
+import { toast } from "sonner"
+import { useState, useEffect } from "react"
 
 const formSchema = z
   .object({
-    city: z.string().nonempty("City is required"),
+    city: z.string().min(1, "City is required"),
     days: z.number().min(1, "Number of days must be at least 1"),
     activities: z.array(z.string()).min(1, "At least one activity is required"),
     other: z.string().optional(),
@@ -35,13 +35,14 @@ const formSchema = z
         "You must select at least one activity or provide other information.",
       path: ["activities"],
     }
-  );
+  )
 
-type FormSchemaType = z.infer<typeof formSchema>;
+type FormSchemaType = z.infer<typeof formSchema>
 
 export default function TripForm() {
-  const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate()
+  const [selectedCity, setSelectedCity] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -51,19 +52,28 @@ export default function TripForm() {
       activities: [],
       other: "",
     },
-  });
+  })
 
-  const { setValue, handleSubmit, control, watch, register } = form;
-  const activitiesValue = watch("activities");
-  const daysValue = watch("days");
-  const cityValue = watch("city");
+  const { setValue, handleSubmit, control, watch } = form
+
+  const activitiesValue = watch("activities")
+  const daysValue = watch("days")
+
+  useEffect(() => {
+    if (selectedCity) {
+      setValue("city", selectedCity);
+    } else {
+      setValue("city", ""); // Set city to an empty string if it's null, triggering validation
+    }
+  }, [selectedCity, setValue]);
+  
 
   async function fetchOrCreateCity(city: string, country: string) {
     try {
-      const cityJson = await getCity(city);
+      const cityJson = await getCity(city)
 
       if (cityJson) {
-        return cityJson;
+        return cityJson
       }
 
       const postCityRes = await clientApi.cities.$post({
@@ -71,25 +81,26 @@ export default function TripForm() {
           name: city,
           country: country,
         },
-      });
+      })
 
-      return await postCityRes.json();
+      return await postCityRes.json()
     } catch (error) {
-      console.error("Error fetching or creating city:", error);
-      throw new Error("Failed to fetch or create city");
+      console.error("Error fetching or creating city:", error)
+      throw new Error("Failed to fetch or create city")
     }
   }
 
   async function onSubmit(values: FormSchemaType) {
-    setIsSubmitting(true); // Inizio l'invio
+    console.log()
+    console.log(selectedCity)
+    setIsSubmitting(true) // Inizio l'invio
     try {
-      const [city, country] = values.city.split("-");
-
-      const cityJson = await fetchOrCreateCity(city, country);
+      const [city, country] = values.city.split(",")
+      const cityJson = await fetchOrCreateCity(city, country)
 
       if (!cityJson) {
-        console.error("City not found or failed to create");
-        return;
+        console.error("City not found or failed to create")
+        return
       }
 
       const newTrip = await addTrip({
@@ -97,28 +108,28 @@ export default function TripForm() {
         days: values.days,
         activities: values.activities,
         other: values.other,
-      });
+      })
 
       if (!newTrip) {
         return toast("Error creating trip", {
           description: "An error occurred while creating the trip",
-        });
+        })
       }
       toast("Trip Created", {
         description: "Successfully created a new trip to " + city,
-      });
+      })
 
       navigate({
         to: "/trips/$tripId",
         params: { tripId: newTrip.id.toString() },
-      });
+      })
     } catch (error) {
       toast("Error creating trip", {
         description: "An error occurred while creating the trip",
-      });
-      console.error("Error creating trip:", error);
+      })
+      console.error("Error creating trip:", error)
     } finally {
-      setIsSubmitting(false); // Rendi il pulsante di submit nuovamente abilitato
+      setIsSubmitting(false) // Rendi il pulsante di submit nuovamente abilitato
     }
   }
 
@@ -145,9 +156,8 @@ export default function TripForm() {
                       <FormLabel>Where do you want to go?</FormLabel>
                       <FormControl>
                         <CityCombobox
-                          setValue={setValue}
-                          register={register("city")}
-                          value={cityValue}
+                          setSelectedCity={setSelectedCity}
+                          selectedCity={selectedCity}
                         />
                       </FormControl>
                       <FormMessage />
@@ -203,5 +213,5 @@ export default function TripForm() {
         </div>
       </div>
     </div>
-  );
+  )
 }

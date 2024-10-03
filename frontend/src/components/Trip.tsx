@@ -31,7 +31,7 @@ const PlacePhoto = ({ placeName }: { placeName: string }) => {
   if (isLoading) {
     return (
       <div>
-        <Skeleton className='w-5/6 h-5/6 rounded-sm lg:w-3/5 lg:h-36 rounded-xl' />
+        <Skeleton className='w-5/6 h-5/6 rounded-sm lg:w-3/5 lg:h-36 lg:rounded-xl' />
       </div>
     );
   }

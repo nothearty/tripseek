@@ -168,7 +168,7 @@ const Navbar = () => {
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
-                      <Link to="/trips" className="flex-shrink-0">
+                      <Link to="/trip-form" className="flex-shrink-0">
                         My Trips
                       </Link>
                     </DropdownMenuItem>
@@ -196,7 +196,7 @@ const Navbar = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <Plane className="mr-2 h-4 w-4 mt-1 opacity-90" />
-                    <Link to="/trips">Generate a trip</Link>
+                    <Link to="/trip-form">Generate a trip</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <LogIn className="mr-2 h-4 w-4 mt-1 opacity-90" />
