@@ -101,15 +101,81 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  AuthenticatedRoute: AuthenticatedRoute.addChildren({
-    AuthenticatedTripsTripIdRoute,
-    AuthenticatedTripsIndexRoute,
-  }),
-  AboutRoute,
-  TripFormRoute,
-})
+interface AuthenticatedRouteChildren {
+  AuthenticatedTripsTripIdRoute: typeof AuthenticatedTripsTripIdRoute
+  AuthenticatedTripsIndexRoute: typeof AuthenticatedTripsIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedTripsTripIdRoute: AuthenticatedTripsTripIdRoute,
+  AuthenticatedTripsIndexRoute: AuthenticatedTripsIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
+  '/about': typeof AboutRoute
+  '/trip-form': typeof TripFormRoute
+  '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
+  '/trips': typeof AuthenticatedTripsIndexRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
+  '/about': typeof AboutRoute
+  '/trip-form': typeof TripFormRoute
+  '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
+  '/trips': typeof AuthenticatedTripsIndexRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/about': typeof AboutRoute
+  '/trip-form': typeof TripFormRoute
+  '/_authenticated/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
+  '/_authenticated/trips/': typeof AuthenticatedTripsIndexRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '' | '/about' | '/trip-form' | '/trips/$tripId' | '/trips'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '' | '/about' | '/trip-form' | '/trips/$tripId' | '/trips'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/about'
+    | '/trip-form'
+    | '/_authenticated/trips/$tripId'
+    | '/_authenticated/trips/'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AboutRoute: typeof AboutRoute
+  TripFormRoute: typeof TripFormRoute
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AboutRoute: AboutRoute,
+  TripFormRoute: TripFormRoute,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 

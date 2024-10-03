@@ -44,6 +44,7 @@ const TripPage = () => {
     console.error("Error parsing trip text:", error);
   }
   // Pass the parsed data to the Trip component
+
   return (
     <Trip
       city={tripData.city}
