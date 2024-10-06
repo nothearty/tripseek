@@ -35,15 +35,24 @@ const TripPage = () => {
   const trip = data as unknown as TripData;
 
   try {
-    if (typeof trip.text === "string") {
+    if (typeof trip.text === "string" && isValidJSON(trip.text)) {
       tripData = JSON.parse(trip.text) as TripProps;
     } else {
-      console.error("Trip text is not a string:", trip.text);
+      console.error("Invalid trip text:", trip.text);
     }
   } catch (error) {
     console.error("Error parsing trip text:", error);
   }
-  // Pass the parsed data to the Trip component
+
+  console.log("tripData", tripData);
+  function isValidJSON(text: string) {
+    try {
+      JSON.parse(text);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   return (
     <Trip
