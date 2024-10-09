@@ -5,11 +5,7 @@ import { City } from "./entities/City.entity";
 
 const dataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: Bun.env.DB_USER,
-  password: Bun.env.DB_PASSWORD,
-  database: Bun.env.DB_NAME,
+  url: Bun.env.DATABASE_URL,
   logging: false,
   synchronize: true,
   entities: [User, City, Trip],
