@@ -9,6 +9,7 @@ export interface User {
 
 export interface TripInput {
   city: string;
+  country: string;
   days: number;
   activities: string[];
   other?: string;
@@ -30,6 +31,7 @@ export interface Trip {
 
 export type TripProps = {
   city: string;
+  country: string;
   daysNumber: number;
   description: string;
   history: string;

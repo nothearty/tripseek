@@ -11,6 +11,7 @@ import {
 
 type TripProps = {
   city: string;
+  country: string;
   daysNumber: number;
   description: string;
   history: string;
@@ -49,7 +50,7 @@ const PlacePhoto = ({ placeName }: { placeName: string }) => {
   );
 };
 
-const CityPhoto = ({ cityName }: { cityName: string }) => {
+const CityPhoto = ({ cityName}: { cityName: string }) => {
   const { data, isLoading, isError } = useQuery(photosQueryOptions(cityName));
 
   if (isLoading) {
@@ -71,6 +72,7 @@ const CityPhoto = ({ cityName }: { cityName: string }) => {
 
 const Trip: React.FC<TripProps> = ({
   city,
+  country, 
   itinerary,
   daysNumber,
   description,
@@ -82,7 +84,7 @@ const Trip: React.FC<TripProps> = ({
         <div className='sm:w-3/4 xl:w-3/4 mx-auto'>
           {/* Image Card */}
           <div className='-mx-2 xl:-mx-12 mb-8 bg-cover bg-center relative rounded-lg overflow-hidden h-[200px] lg:h-[300px]'>
-            <CityPhoto cityName={city} />
+            <CityPhoto cityName={city + ', ' + country} />
             <div className='absolute inset-0 bg-black opacity-60'></div>
             <div className='p-6 sm:p-12 relative h-full flex flex-col justify-end'>
               <span className='text-white text-4xl sm:text-6xl font-bold'>
@@ -129,7 +131,7 @@ const Trip: React.FC<TripProps> = ({
                                   </div>
                                   <div className='w-1/2 flex justify-end items-center'>
                                     <PlacePhoto
-                                      placeName={activity.placeName}
+                                      placeName={activity.placeName + "( " + city + ", " + country + ")"}
                                     />
                                   </div>
                                 </div>

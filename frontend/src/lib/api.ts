@@ -117,7 +117,7 @@ export async function getCity(cityName: string): Promise<City | null> {
       param: {
         name: cityName,
       },
-    });
+    })
     return (await res.json()) as City;
   } catch (error) {
     return null;

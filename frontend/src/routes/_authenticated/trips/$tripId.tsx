@@ -26,6 +26,7 @@ const TripPage = () => {
   // Parsing the text field from the trip data
   let tripData: TripProps = {
     city: "",
+    country: "",
     daysNumber: 0,
     description: "",
     history: "",
@@ -57,6 +58,7 @@ const TripPage = () => {
   return (
     <Trip
       city={tripData.city}
+      country={tripData.country}
       itinerary={tripData.itinerary}
       daysNumber={tripData.daysNumber}
       description={tripData.description}

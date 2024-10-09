@@ -95,6 +95,7 @@ const tripsRoute = new Hono<{ Variables: Variables }>()
 
       const tripText = await generateTrip({
         city: city.name,
+        country: city.country,
         days: tripData.days,
         activities: tripData.activities,
         other: tripData.other,

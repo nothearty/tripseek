@@ -23,17 +23,17 @@ const formSchema = z
   .object({
     city: z.string().min(1, "City is required"),
     days: z.number().min(1, "Number of days must be at least 1"),
-    activities: z.array(z.string()).min(1, "At least one activity is required"),
-    other: z.string().optional(),
+    activities: z.array(z.string()).optional(), // Make activities optional
+    other: z.string().optional(), // Optional field
   })
   .refine(
     (data) =>
-      data.activities.length > 0 ||
-      (data.other && data.other.trim().length > 0),
+      (data.activities && data.activities.length > 0) || // Activities can be optional
+      (data.other && data.other.trim().length > 0), // Other must be non-empty if no activities are selected
     {
       message:
         "You must select at least one activity or provide other information.",
-      path: ["activities"],
+      path: ["activities"], // Error message for activities if validation fails
     }
   )
 
@@ -61,12 +61,11 @@ export default function TripForm() {
 
   useEffect(() => {
     if (selectedCity) {
-      setValue("city", selectedCity);
+      setValue("city", selectedCity)
     } else {
-      setValue("city", ""); // Set city to an empty string if it's null, triggering validation
+      setValue("city", "") // Set city to an empty string if it's null, triggering validation
     }
-  }, [selectedCity, setValue]);
-  
+  }, [selectedCity, setValue])
 
   async function fetchOrCreateCity(city: string, country: string) {
     try {
@@ -91,9 +90,7 @@ export default function TripForm() {
   }
 
   async function onSubmit(values: FormSchemaType) {
-    console.log()
-    console.log(selectedCity)
-    setIsSubmitting(true) // Inizio l'invio
+    setIsSubmitting(true)
     try {
       const [city, country] = values.city.split(",")
       const cityJson = await fetchOrCreateCity(city, country)
@@ -115,6 +112,7 @@ export default function TripForm() {
           description: "An error occurred while creating the trip",
         })
       }
+
       toast("Trip Created", {
         description: "Successfully created a new trip to " + city,
       })
@@ -129,7 +127,7 @@ export default function TripForm() {
       })
       console.error("Error creating trip:", error)
     } finally {
-      setIsSubmitting(false) // Rendi il pulsante di submit nuovamente abilitato
+      setIsSubmitting(false)
     }
   }
 
