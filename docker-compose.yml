@@ -15,7 +15,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile  # Ensure you're referencing the Dockerfile that sets up Nginx
     ports:
-      - "80:80"
+      - "81:80"
     depends_on:
       - frontend
     networks:
