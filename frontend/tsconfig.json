@@ -1,37 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "ES2022", 
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "baseUrl": "./src/",
-    "paths": {
-      "@/*": ["*"],
-      "@components/*": ["/components/*"],
-      "@lib/*": ["lib/*"],
-      "@server/*": ["../../backend/src/*"]
-    },
-    "allowImportingTsExtensions": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true, // Change to false if you want TypeScript to emit JS
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true // Added to skip type checks on declaration files
-  },
-  "include": [
-    "next-env.d.ts",
-    "twin.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "./frontend/src",
-    "**/components/ui/*.tsx"
-  ],
-  "exclude": ["node_modules"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }
