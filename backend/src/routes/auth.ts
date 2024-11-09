@@ -108,7 +108,7 @@ const loginRoute = new Hono<{ Variables: Variables }>()
       session.set("user", user);
 
       // Redirect to frontend after successful login
-      const redirectUrl = `http://frontend/`;
+      const redirectUrl = `http://localhost:5173/`
       return c.redirect(redirectUrl);
     } catch (error) {
       return c.json({ error: "Authentication failed" }, 500);
