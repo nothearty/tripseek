@@ -28,7 +28,7 @@ export const CityCombobox: React.FC<CityComboboxProps> = ({
   const fetchCities = async (query: string) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_CITIES_API_URL}?name_startsWith=${query}&featureClass=P&cities=cities5000&maxRows=10&username=${import.meta.env.VITE_CITIES_API_USERNAME}`
+        `/api/cities/geonames?name_startsWith=${query}`
       )
       const data = await response.json()
 
